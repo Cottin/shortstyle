@@ -1,11 +1,11 @@
-{merge, props, type} = require 'ramda' #auto_require:ramda
+{merge, none, props, type} = require 'ramda' #auto_require:ramda
 React = require 'react'
 shortstyle = require 'shortstyle'
 
 styleMaps = require './styleMaps'
 attrMaps = require './attrMaps'
 
-calculateProps = shortstyle styleMaps, attrMaps
+_calculateProps = shortstyle styleMaps, attrMaps
 
 # Runs supplied props through shortstyle and calls React.createElement
 createElement = ->
@@ -26,28 +26,29 @@ createElementFela = (renderer) -> ->
 	if type(a0) == 'String'
 		_createElementString.apply undefined, arguments
 	else if type(a0) == 'Object'
-		createElementDivFela.apply renderer, arguments
+		_createElementDivFela.apply renderer, arguments
 	else
 		_createElementComponent.apply undefined, arguments
 
 
 
 _createElementString = (s, props, children...) ->
-	[props_, style] = calculateProps(props)
+	_[props_, style] = calculateProps(props)
 	React.createElement s, merge(props_, {style}), children...
 
 _createElementDiv = (props, children...) ->
-	[props_, style] = calculateProps(props)
+	_[props_, style] = calculateProps(props)
 	React.createElement 'div', merge(props_, {style}), children...
 
 _createElementComponent = (component, props, children...) ->
-	[props_, style] = calculateProps(props)
+	_[props_, style] = calculateProps(props)
 	React.createElement component, merge(props_, {style}), children...
 
-createElementDivFela = (props, children...) ->
-	[props_, style] = calculateProps(props)
+_createElementDivFela = (props, children...) ->
+	_[props_, style] = calculateProps(props)
 	className = @renderRule (-> style), {}
 	React.createElement 'div', merge(props_, {className}), children...
 
 
+#auto_export:none_
 module.exports = {createElement, createElementFela}
