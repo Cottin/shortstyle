@@ -7,7 +7,7 @@ baseStyleMaps = require './baseStyleMaps'
 # Call that transformation function with properties for an element and get a
 # pair back of [calculatedProperties, calculatedStyle]
 shortstyle = (styleMaps = {}, attrMaps = {}) -> (props) ->
-	style_ = Object.assign {}, props.style || {}
+	style_ = Object.assign {}, props?.style || {}
 	props_ = {}
 
 	for k,v of props
