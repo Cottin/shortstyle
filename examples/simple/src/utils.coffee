@@ -7,38 +7,42 @@ attrMaps = require './attrMaps'
 
 calculateProps = shortstyle styleMaps, attrMaps
 
+# Runs supplied props through shortstyle and calls React.createElement
 createElement = ->
 	[a0]  = arguments
 
 	if type(a0) == 'String'
-		createElementString.apply undefined, arguments
+		_createElementString.apply undefined, arguments
 	else if type(a0) == 'Object'
-		createElementDiv.apply undefined, arguments
+		_createElementDiv.apply undefined, arguments
 	else
-		createElementComponent.apply undefined, arguments
+		_createElementComponent.apply undefined, arguments
 
-createElementString = (s, props, children...) ->
-	[props_, style] = calculateProps(props)
-	React.createElement s, merge(props_, {style}), children...
-
-createElementDiv = (props, children...) ->
-	[props_, style] = calculateProps(props)
-	React.createElement 'div', merge(props_, {style}), children...
-
-createElementComponent = (component, props, children...) ->
-	[props_, style] = calculateProps(props)
-	React.createElement component, merge(props_, {style}), children...
-
-
+# Runs supplied props through shortstyle and runs the result through fela and
+# lastly calls React.createElement
 createElementFela = (renderer) -> ->
 	[a0]  = arguments
 
 	if type(a0) == 'String'
-		createElementString.apply undefined, arguments
+		_createElementString.apply undefined, arguments
 	else if type(a0) == 'Object'
 		createElementDivFela.apply renderer, arguments
 	else
-		createElementComponent.apply undefined, arguments
+		_createElementComponent.apply undefined, arguments
+
+
+
+_createElementString = (s, props, children...) ->
+	[props_, style] = calculateProps(props)
+	React.createElement s, merge(props_, {style}), children...
+
+_createElementDiv = (props, children...) ->
+	[props_, style] = calculateProps(props)
+	React.createElement 'div', merge(props_, {style}), children...
+
+_createElementComponent = (component, props, children...) ->
+	[props_, style] = calculateProps(props)
+	React.createElement component, merge(props_, {style}), children...
 
 createElementDivFela = (props, children...) ->
 	[props_, style] = calculateProps(props)
