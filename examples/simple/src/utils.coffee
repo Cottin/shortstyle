@@ -33,19 +33,19 @@ createElementFela = (renderer) -> ->
 
 
 _createElementString = (s, props, children...) ->
-	_[props_, style] = calculateProps(props)
+	[props_, style] = _calculateProps(props)
 	React.createElement s, merge(props_, {style}), children...
 
 _createElementDiv = (props, children...) ->
-	_[props_, style] = calculateProps(props)
+	[props_, style] = _calculateProps(props)
 	React.createElement 'div', merge(props_, {style}), children...
 
 _createElementComponent = (component, props, children...) ->
-	_[props_, style] = calculateProps(props)
+	[props_, style] = _calculateProps(props)
 	React.createElement component, merge(props_, {style}), children...
 
 _createElementDivFela = (props, children...) ->
-	_[props_, style] = calculateProps(props)
+	[props_, style] = _calculateProps(props)
 	className = @renderRule (-> style), {}
 	React.createElement 'div', merge(props_, {className}), children...
 
