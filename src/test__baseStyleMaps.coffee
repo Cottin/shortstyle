@@ -53,27 +53,27 @@ describe 'shortstyle', ->
 			deepEq [{}, {position: 'relative'}], short({pos: 'r'})
 			deepEq [{}, {position: 'static'}], short({pos: 's'})
 
-	describe 'f = flex', ->
+	describe 'x = flex', ->
 		it 'direction', ->
-			deepEq [{}, {flexDirection: 'row'}], short({f: 'r'})
-			deepEq [{}, {flexDirection: 'column'}], short({f: 'c'})
-			throws /is invalid, see docs/, -> short({f: 'x'})
+			deepEq [{}, {flexDirection: 'row'}], short({x: 'r'})
+			deepEq [{}, {flexDirection: 'column'}], short({x: 'c'})
+			throws /is invalid, see docs/, -> short({x: 'x'})
 		it 'justify-content', ->
-			fit {justifyContent: 'center'}, short({f: 'rc'})[1]
-			fit {justifyContent: 'flex-end'}, short({f: 're'})[1]
-			fit {justifyContent: 'flex-start'}, short({f: 'cs'})[1]
-			fit {justifyContent: 'space-around'}, short({f: 'ca'})[1]
-			fit {justifyContent: 'space-between'}, short({f: 'rb'})[1]
-			eq false, has('justifyContent', short({f: 'r_'})[1])
-			throws /is invalid, see docs/, -> short({f: 'rx'})
+			fit {justifyContent: 'center'}, short({x: 'rc'})[1]
+			fit {justifyContent: 'flex-end'}, short({x: 're'})[1]
+			fit {justifyContent: 'flex-start'}, short({x: 'cs'})[1]
+			fit {justifyContent: 'space-around'}, short({x: 'ca'})[1]
+			fit {justifyContent: 'space-between'}, short({x: 'rb'})[1]
+			eq false, has('justifyContent', short({x: 'r_'})[1])
+			throws /is invalid, see docs/, -> short({x: 'rx'})
 		it 'align-items', ->
-			fit {alignItems: 'baseline'}, short({f: 'rcb'})[1]
-			fit {alignItems: 'center'}, short({f: 'rec'})[1]
-			fit {alignItems: 'flex-end'}, short({f: 'cse'})[1]
-			fit {alignItems: 'flex-start'}, short({f: 'css'})[1]
-			fit {alignItems: 'strech'}, short({f: 'cat'})[1]
-			eq false, has('alignItems', short({f: 'ra_'})[1])
-			throws /is invalid, see docs/, -> short({f: 'rsx'})
+			fit {alignItems: 'baseline'}, short({x: 'rcb'})[1]
+			fit {alignItems: 'center'}, short({x: 'rec'})[1]
+			fit {alignItems: 'flex-end'}, short({x: 'cse'})[1]
+			fit {alignItems: 'flex-start'}, short({x: 'css'})[1]
+			fit {alignItems: 'strech'}, short({x: 'cat'})[1]
+			eq false, has('alignItems', short({x: 'ra_'})[1])
+			throws /is invalid, see docs/, -> short({x: 'rsx'})
 
 	describe 'm = margin', ->
 		it 'simple cases', ->
@@ -91,15 +91,15 @@ describe 'shortstyle', ->
 			deepEq [{}, {margin: '10%'}], short({m: '10%'})
 			throws /invalid pattern/, -> short({m: '1px 10vh'})
 
-	describe 't = font (text)', ->
+	describe 'f = font', ->
 		it 'simple cases', ->
-			ydeepEq short({t: 145721})[1],
+			ydeepEq short({f: 145721})[1],
 				fontFamily: 'Times New Roman, Times, serif'
 				fontSize: '12px'
 				fontWeight: 200
 				color: 'rgba(0, 0, 100, 0.7)'
 				textShadow: '1px 1px 1px rgba(0,0,0,0.50)'
-			yfit short({t: 145700})[1],
+			yfit short({f: 145700})[1],
 				color: 'rgba(0, 0, 100, 0.7)'
 
 	describe 'bg = background', ->

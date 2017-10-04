@@ -50,18 +50,18 @@ toh = (x) -> {top: x + 'vh'}
 tow = (x) -> {top: x + 'vw'}
 
 # flex-box
-f = (x) ->
-	if type(x) != 'String' || x == ''
+x = (v) ->
+	if type(v) != 'String' || v == ''
 		throw new Error _ERR + 'f expects a non-empty string'
 
 	ret = {}
 
-	di = x[0]
+	di = v[0]
 	if di == 'r' then ret.flexDirection = 'row'
 	else if di == 'c' then ret.flexDirection = 'column'
-	else throw new Error _ERR + "first char in f: '#{x}' is invalid, see docs"
+	else throw new Error _ERR + "first char in f: '#{v}' is invalid, see docs"
 
-	jc = x[1]
+	jc = v[1]
 	if !jc then return ret
 	if jc == 'c' then ret.justifyContent = 'center'
 	else if jc == 'e' then ret.justifyContent = 'flex-end'
@@ -69,9 +69,9 @@ f = (x) ->
 	else if jc == 'a' then ret.justifyContent = 'space-around'
 	else if jc == 'b' then ret.justifyContent = 'space-between'
 	else if jc == '_' then # noop
-	else throw new Error _ERR + "second char in f: '#{x}' is invalid, see docs"
+	else throw new Error _ERR + "second char in f: '#{v}' is invalid, see docs"
 
-	ai = x[2]
+	ai = v[2]
 	if !ai then return ret
 	if ai == 'b' then ret.alignItems = 'baseline'
 	else if ai == 'c' then ret.alignItems = 'center'
@@ -79,15 +79,15 @@ f = (x) ->
 	else if ai == 's' then ret.alignItems = 'flex-start'
 	else if ai == 't' then ret.alignItems = 'strech'
 	else if ai == '_' then # noop
-	else throw new Error _ERR + "third char in f: '#{x}' is invalid, see docs"
+	else throw new Error _ERR + "third char in f: '#{v}' is invalid, see docs"
 
-	wrap = x[3]
+	wrap = v[3]
 	if !wrap then return ret
 	if wrap == 'w' then ret.flexWrap = 'wrap'
 	else if wrap == 'r' then ret.flexWrap = 'wrap-reverse'
-	else throw new Error _ERR + "fourth char in f: '#{x}' is invalid, see docs"
+	else throw new Error _ERR + "fourth char in f: '#{v}' is invalid, see docs"
 
-	if x[4] then throw new Error _ERR + "f only supports 4 chars '#{x}', see docs"
+	if v[4] then throw new Error _ERR + "f only supports 4 chars '#{v}', see docs"
 
 	return ret
 
@@ -136,8 +136,8 @@ whs = (x) ->
 ##### Functions below this line are things you'd want to override in your app:
 ##### (Implementations below are provided as inspiration / templates)
 
-# font = "text"
-t = (x) ->
+# font
+f = (x) ->
 	x_ = x + ''
 	if ! test /^\d{6}$/, x_
 		throw new Error "t expects a 6-digit number, given: #{x}, see docs"
@@ -206,4 +206,4 @@ bg = (x) ->
 
 
 #auto_export:none_
-module.exports = {z, h, hp, hh, hw, w, wp, wh, ww, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, f, m, p, br, bo, ta, whs, t, bg}
+module.exports = {z, h, hp, hh, hw, w, wp, wh, ww, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, x, m, p, br, bo, ta, whs, f, bg}
