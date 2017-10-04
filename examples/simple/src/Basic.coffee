@@ -7,20 +7,20 @@ _ = createElement # shorthand
 
 Basic = React.createClass
 	render: ->
-		_ {f: 'c_c', ww: 100, hh: 70, ih: 1000, p: '20% 20%', bg: 'blue'},
-			_ {ta:'c', t: 161040}, 'Tired of the standard way of handing styling and css-classes?'
+		_ {x: 'c_c', ww: 100, hh: 70, ih: 1000, p: '20% 20%', bg: 'blue'},
+			_ {ta:'c', f: 161040}, 'Tired of the standard way of handing styling and css-classes?'
 			_ {hp: 8}
-			_ {ta:'c', t: 152030}, 'Try something else instead!'
+			_ {ta:'c', f: 152030}, 'Try something else instead!'
 			_ {hp: 2}
-			_ {ta:'c', t: 293060}, 'ShortStyle'
+			_ {ta:'c', f: 293060}, 'ShortStyle'
 			_ {hp: 10}
-			_ {f: 'r__w'},
+			_ {x: 'r__w'},
 				map renderSquare, range(0,10)
 			_ {hp: 10}
-			_ 'a', {href: 'https://github.com/Cottin/shortstyle', ta:'c', t: 352060},
+			_ 'a', {href: 'https://github.com/Cottin/shortstyle', ta:'c', f: 352060},
 				'https://github.com/Cottin/shortstyle'
 
 renderSquare = (key) ->
-	_ {key, bg: 'purple', ww: 10, xw: 70, hw: 10, xh: 70, f: 'ccc', t: 151040, m: '3vw'}, ':-)'
+	_ {key, bg: 'purple', ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc', f: 151040, m: '3vw'}, ':-)'
 
 module.exports = Basic

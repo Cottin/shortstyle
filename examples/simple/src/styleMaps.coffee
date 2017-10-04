@@ -4,7 +4,7 @@
 _ERR = 'Simple Stylemaps:'
 
 # Overwriting t = text
-t = (x) ->
+f = (x) ->
 	x_ = x + ''
 	if ! test /^\d{6}$/, x_
 		throw new Error "t expects a 6-digit number, given: #{x}, you idiot"
@@ -60,4 +60,4 @@ bg = (x) ->
 		else throw new Error _ERR + "invalid background '#{x}'"
 
 #auto_export:none_
-module.exports = {t, bg}
+module.exports = {f, bg}
