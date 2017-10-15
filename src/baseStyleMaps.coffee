@@ -52,14 +52,14 @@ tow = (x) -> {top: x + 'vw'}
 # flex-box
 x = (v) ->
 	if type(v) != 'String' || v == ''
-		throw new Error _ERR + 'f expects a non-empty string'
+		throw new Error _ERR + 'x expects a non-empty string'
 
 	ret = {}
 
 	di = v[0]
 	if di == 'r' then ret.flexDirection = 'row'
 	else if di == 'c' then ret.flexDirection = 'column'
-	else throw new Error _ERR + "first char in f: '#{v}' is invalid, see docs"
+	else throw new Error _ERR + "first char in x: '#{v}' is invalid, see docs"
 
 	jc = v[1]
 	if !jc then return ret
@@ -69,7 +69,7 @@ x = (v) ->
 	else if jc == 'a' then ret.justifyContent = 'space-around'
 	else if jc == 'b' then ret.justifyContent = 'space-between'
 	else if jc == '_' then # noop
-	else throw new Error _ERR + "second char in f: '#{v}' is invalid, see docs"
+	else throw new Error _ERR + "second char in x: '#{v}' is invalid, see docs"
 
 	ai = v[2]
 	if !ai then return ret
@@ -79,15 +79,30 @@ x = (v) ->
 	else if ai == 's' then ret.alignItems = 'flex-start'
 	else if ai == 't' then ret.alignItems = 'strech'
 	else if ai == '_' then # noop
-	else throw new Error _ERR + "third char in f: '#{v}' is invalid, see docs"
+	else throw new Error _ERR + "third char in x: '#{v}' is invalid, see docs"
 
 	wrap = v[3]
 	if !wrap then return ret
 	if wrap == 'w' then ret.flexWrap = 'wrap'
 	else if wrap == 'r' then ret.flexWrap = 'wrap-reverse'
-	else throw new Error _ERR + "fourth char in f: '#{v}' is invalid, see docs"
+	else if wrap == '_' then # noop
+	else throw new Error _ERR + "fourth char in x: '#{v}' is invalid, see docs"
 
-	if v[4] then throw new Error _ERR + "f only supports 4 chars '#{v}', see docs"
+	grow = v[4]
+	if !grow then return ret
+	if grow == '_' then # noop
+	else if isNaN parseInt grow
+		throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
+	else ret.flexGrow = parseInt grow
+
+	shrink = v[5]
+	if !shrink then return ret
+	if shrink == '_' then # noop
+	else if isNaN parseInt shrink
+		throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
+	else ret.flexShrink = parseInt shrink
+
+	if v[6] then throw new Error _ERR + "x only supports 6 chars '#{v}', see docs"
 
 	return ret
 

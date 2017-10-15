@@ -74,6 +74,16 @@ describe 'shortstyle', ->
 			fit {alignItems: 'strech'}, short({x: 'cat'})[1]
 			eq false, has('alignItems', short({x: 'ra_'})[1])
 			throws /is invalid, see docs/, -> short({x: 'rsx'})
+		it 'flex-grow', ->
+			fit {flexGrow: 0}, short({x: 'rcbw0'})[1]
+			fit {flexGrow: 2}, short({x: 'rcbw2'})[1]
+			eq false, has('flexGrow', short({x: 'rabw_'})[1])
+			throws /is invalid, see docs/, -> short({x: 'rsbwx'})
+		it 'flex-shrink', ->
+			fit {flexShrink: 0}, short({x: 'rcbw10'})[1]
+			fit {flexShrink: 2}, short({x: 'rcbw_2'})[1]
+			eq false, has('flexShrink', short({x: 'rabw0_'})[1])
+			throws /is invalid, see docs/, -> short({x: 'rsbw0x'})
 
 	describe 'm = margin', ->
 		it 'simple cases', ->
