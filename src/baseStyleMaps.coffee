@@ -110,9 +110,9 @@ x = (v) ->
 _oneTwoFour = (key) -> (x) ->
 	if type(x) == 'Number' then return {"#{key}": x + 'px'}
 
-	re1 = /^-?\d+(vh|vw|%){0,1}$/ 
-	re2 = /^-?\d+(vh|vw|%){0,1} -?\d+(vh|vw|%){0,1}$/ 
-	re4 = /^-?\d+(vh|vw|%){0,1} -?\d+(vh|vw|%){0,1} -?\d+(vh|vw|%){0,1} -?\d+(vh|vw|%){0,1}$/ 
+	re1 = /^-?\d+(vh|vw|%|rem){0,1}$/ 
+	re2 = /^-?\d+(vh|vw|%|rem){0,1} -?\d+(vh|vw|%|rem){0,1}$/ 
+	re4 = /^-?\d+(vh|vw|%|rem){0,1} -?\d+(vh|vw|%|rem){0,1} -?\d+(vh|vw|%|rem){0,1} -?\d+(vh|vw|%|rem){0,1}$/ 
 
 	if test re1, x
 		return {"#{key}": x}

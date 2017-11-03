@@ -98,6 +98,7 @@ describe 'shortstyle', ->
 			deepEq [{}, {padding: '0px 10px 2px 3px'}], short({p: '0 10 2 3'})
 			deepEq [{}, {padding: '1px 10vh 2vw 3%'}], short({p: '1 10vh 2vw 3%'})
 			deepEq [{}, {padding: '1px 10vh'}], short({p: '1 10vh'})
+			deepEq [{}, {padding: '1px 10rem 2vw 3%'}], short({p: '1 10rem 2vw 3%'})
 			deepEq [{}, {margin: '10%'}], short({m: '10%'})
 			throws /invalid pattern/, -> short({m: '1px 10vh'})
 
