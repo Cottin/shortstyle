@@ -89,6 +89,10 @@ describe 'shortstyle', ->
 			eq false, has('flexShrink', short({x: 'rabw0_'})[1])
 			throws /is invalid, see docs/, -> short({x: 'rsbw0x'})
 
+	describe 'xb = flex-basis', ->
+		it 'simple', ->
+			deepEq [{}, {flexBasis: '25%'}], short({xb: '25%'})
+
 	describe 'm = margin', ->
 		it 'simple cases', ->
 			deepEq [{}, {margin: '0px 10px 2px 3px'}], short({m: '0 10 2 3'})

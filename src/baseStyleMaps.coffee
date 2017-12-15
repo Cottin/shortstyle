@@ -110,6 +110,7 @@ x = (v) ->
 
 	return ret
 
+xb = (v) -> {flexBasis: v}
 
 _oneTwoFour = (key) -> (x) ->
 	if type(x) == 'Number' then return {"#{key}": x + 'px'}
@@ -225,4 +226,4 @@ bg = (x) ->
 
 
 #auto_export:none_
-module.exports = {z, h, hp, hh, hw, hr, he, w, wp, wh, ww, wr, we, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, x, m, p, br, bo, ta, whs, f, bg}
+module.exports = {z, h, hp, hh, hw, hr, he, w, wp, wh, ww, wr, we, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, x, xb, m, p, br, bo, ta, whs, f, bg}
