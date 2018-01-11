@@ -15,6 +15,7 @@ hh = (x) -> {height: x + 'vh'}
 hw = (x) -> {height: x + 'vw'}
 hr = (x) -> {height: x + 'rem'}
 he = (x) -> {height: x + 'em'}
+hc = (x) -> {height: "calc(#{x})"}
 
 # width
 w = (x) -> {width: x + 'px'}
@@ -23,6 +24,7 @@ wh = (x) -> {width: x + 'vh'}
 ww = (x) -> {width: x + 'vw'}
 wr = (x) -> {width: x + 'rem'}
 we = (x) -> {width: x + 'em'}
+wc = (x) -> {width: "calc(#{x})"}
 
 # min/max-height
 ih = (x) -> {minHeight: x + 'px'}
@@ -226,4 +228,4 @@ bg = (x) ->
 
 
 #auto_export:none_
-module.exports = {z, h, hp, hh, hw, hr, he, w, wp, wh, ww, wr, we, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, x, xb, m, p, br, bo, ta, whs, f, bg}
+module.exports = {z, h, hp, hh, hw, hr, he, hc, w, wp, wh, ww, wr, we, wc, ih, xh, iw, xw, pos, le, lep, leh, lew, to, top, toh, tow, x, xb, m, p, br, bo, ta, whs, f, bg}

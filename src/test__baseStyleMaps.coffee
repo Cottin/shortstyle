@@ -29,6 +29,7 @@ describe 'shortstyle', ->
 		it 'hw = vw', -> deepEq [{}, {height: '87vw'}], short({hw: 87})
 		it 'hr = rem', -> deepEq [{}, {height: '87rem'}], short({hr: 87})
 		it 'he = em', -> deepEq [{}, {height: '87em'}], short({he: 87})
+		it 'hc = calc', -> deepEq [{}, {height: 'calc(87vw + 10)'}], short({hc: '87vw + 10'})
 
 	describe 'w = width', ->
 		it 'w = px', -> deepEq [{}, {width: '87px'}], short({w: 87})
@@ -37,6 +38,7 @@ describe 'shortstyle', ->
 		it 'ww = vw', -> deepEq [{}, {width: '87vw'}], short({ww: 87})
 		it 'wr = rem', -> deepEq [{}, {width: '87rem'}], short({wr: 87})
 		it 'we = em', -> deepEq [{}, {width: '87em'}], short({we: 87})
+		it 'wc = calc', -> deepEq [{}, {width: 'calc(87vw + 10)'}], short({wc: '87vw + 10'})
 
 	describe 'ih = min-height', ->
 		it 'simple case', -> deepEq [{}, {minHeight: '87px'}], short({ih: 87})
