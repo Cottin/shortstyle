@@ -8,7 +8,8 @@ _ = createElement # shorthand
 Basic = React.createClass
 	render: ->
 		_ {x: 'c_c', ww: 100, hh: 70, ih: 1000, p: '20% 20%', bg: 'blue'},
-			_ {ta:'c', f: 161040}, 'Tired of the standard way of handing styling and css-classes?'
+			_ {ta:'c', f: 161040}, 'Tired of the standard way of handing styling and 
+			css-classes?'
 			_ {hp: 8}
 			_ {ta:'c', f: 152030}, 'Try something else instead!'
 			_ {hp: 2}
@@ -21,6 +22,7 @@ Basic = React.createClass
 				'https://github.com/Cottin/shortstyle'
 
 renderSquare = (key) ->
-	_ {key, bg: 'purple', ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc', f: 151040, m: '3vw'}, ':-)'
+	_ {key, mix: 'square lined', p: 20, ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc',
+	f: 153040, m: '3vw'}, ':-)'
 
 module.exports = Basic

@@ -1,14 +1,15 @@
-{isNil, pair, props, test} = require 'ramda' #auto_require:ramda
+{isNil, props, test} = require 'ramda' #auto_require:ramda
 
-baseStyleMaps = require './baseStyleMaps'
+getBaseStyleMaps = require './baseStyleMaps'
 
 # o, o -> o -> [o, o]
 # Supply your own styleMaps and attrMaps and get a transformation function back.
 # Call that transformation function with properties for an element and get a
 # pair back of [calculatedProperties, calculatedStyle]
-shortstyle = (styleMaps = {}, attrMaps = {}) -> (props) ->
+shortstyle = (styleMaps = {}, attrMaps = {}, unit) -> (props) ->
 	style_ = Object.assign {}, props?.style || {}
 	props_ = {}
+	baseStyleMaps = getBaseStyleMaps unit
 
 	for k,v of props
 		if styleMaps[k]

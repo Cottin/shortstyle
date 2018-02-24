@@ -1,4 +1,4 @@
-{F, none, test} = require 'ramda' #auto_require:ramda
+{merge, reduce, split, test} = require 'ramda' #auto_require:ramda
 
 
 _ERR = 'Simple Stylemaps:'
@@ -59,5 +59,23 @@ bg = (x) ->
 			backgroundImage: 'linear-gradient(0deg, #DC6237 1%, #EA9E3A 99%)'
 		else throw new Error _ERR + "invalid background '#{x}'"
 
+mix = (x) ->
+	mixins = split ' ', x
+	mergeM = (mem, m) -> merge mem, _mixins(m)
+	reduce mergeM, {}, mixins
+
+_mixins = (m) ->
+	switch m
+
+		when 'square' # e.g. a commonly used box in your design
+			background: '#00ead5'
+			boxShadow: '0 1px 2px 0 rgba(0,0,0,0.99)'
+			borderRadius: 9
+
+		when 'lined' # e.g. a commonly used box in your design
+			border: '5px solid pink'
+
+		else throw new Error _ERR + "invalid mixin '#{m}'"
+
 #auto_export:none_
-module.exports = {f, bg}
+module.exports = {f, bg, mix}

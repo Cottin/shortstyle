@@ -29,6 +29,7 @@ App = React.createClass
 						'https://github.com/Cottin/shortstyle'
 
 renderSquare = (key) ->
-	_ {key, bg: 'purple', ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc', f: 151040, m: '3vw'}, ':-)'
+	_ {key, mix: 'square lined', p: 20, ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc',
+	f: 153040, m: '3vw'}, ':-)'
 
 module.exports = App
