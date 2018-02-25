@@ -77,6 +77,9 @@ describe 'shortstyle', ->
 
 			it 'two', -> deepEq [{}, {margin: '1px 10vh'}], short({s: 'm1_10vh'})
 
+		describe 'wh = whitespace', ->
+			it 'simple', -> deepEq [{}, {whiteSpace: 'nowrap'}], short({s: 'whn'})
+
 		describe 'bg = background', ->
 			it 'simple cases', ->
 				deepEq [{}, {backgroundColor: 'blue'}], short({s: 'bga1'})
