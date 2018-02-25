@@ -50,6 +50,10 @@ describe 'shortstyle', ->
 					borderRadius: 9
 				}]
 
+		describe 'edge cases', ->
+			it 'undefined', ->
+				deepEq [{}, {}], short()
+
 
 	describe 'as string', ->
 
