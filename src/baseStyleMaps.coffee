@@ -1,4 +1,4 @@
-{empty, equals, join, map, merge, repeat, reverse, split, test, type} = require 'ramda' #auto_require:ramda
+{empty, join, map, match, merge, repeat, reverse, split, type} = require 'ramda' #auto_require:ramda
 {cc, freduce} = require 'ramda-extras' #auto_require:ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -9,8 +9,7 @@ defaultUnit = (x) ->
 	if type(x) == 'Number' then x + 'px'
 	else x
 
-tryParseNum = (x) ->
-	if equals NaN, Number(x) then x else Number(x)
+tryParseNum = (x) -> if isNaN x then x else Number(x)
 
 getBaseStyleMaps = (unit = defaultUnit) ->
 	##### UNIT BASED
@@ -125,7 +124,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	z = (x) -> {zIndex: x}
 
 	# white-space
-	whs = (x) ->
+	wh = (x) ->
 		switch x
 			when 'n' then whiteSpace: 'nowrap'
 			when 'p' then whiteSpace: 'pre'
@@ -134,7 +133,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			given: #{x}"
 
 	# overflow
-	ove = (x) ->
+	ov = (x) ->
 		switch x
 			when 'a' then overflow: 'auto'
 			when 's' then overflow: 'scroll'
@@ -160,20 +159,16 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 	# font
 	f = (x) ->
-		x_ = x + ''
-		if ! test /^\d{6}$/, x_
-			throw new Error "t expects a 6-digit number, given: #{x}, see docs"
-
 		ret = {}
+		[_, family, size, color, weight] = match /^([a-z])(\d+)([a-z]{2,3})(\d)/, x
 
-		family = x_[0]
-		if family == '1' then ret.fontFamily = 'Times New Roman, Times, serif'
-		else if family == '2' then ret.fontFamily = 'Arial, Helvetica, sans-serif'
-		else if family == '3' then ret.fontFamily = 'Comic Sans MS, cursive, sans-serif'
-		else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
+		switch family
+			when 't' then ret.fontFamily = 'Times New Roman, Times, serif'
+			when 'a' then ret.fontFamily = 'Arial, Helvetica, sans-serif'
+			when 'c' then ret.fontFamily = 'Comic Sans MS, cursive, sans-serif'
+			else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
 
-		size = parseInt x_[1]
-		switch size
+		switch parseInt size
 			when 1 then ret.fontSize = 8 + 'px'
 			when 2 then ret.fontSize = 9 + 'px'
 			when 3 then ret.fontSize = 11 + 'px'
@@ -183,30 +178,21 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 7 then ret.fontSize = 18 + 'px'
 			when 8 then ret.fontSize = 25 + 'px'
 			when 9 then ret.fontSize = 30 + 'px'
+			when 10 then ret.fontSize = 35 + 'px'
+			when 11 then ret.fontSize = 40 + 'px'
 			else throw new Error _ERR + "invalid size '#{size}' for t: #{x}"
 
 
-		color = parseInt x_[2]
-		opa = parseInt(x_[3])
-		opacity = if opa == 0 then 1 else opa / 10
+		opacity = 1
 		switch color
-			when 1 then ret.color = "rgba(0, 0, 0, #{opacity})"
-			when 2 then ret.color = "rgba(255, 255, 255, #{opacity})"
-			when 3 then ret.color = "rgba(100, 0, 0, #{opacity})"
-			when 4 then ret.color = "rgba(0, 100, 0, #{opacity})"
-			when 5 then ret.color = "rgba(0, 0, 100, #{opacity})"
-			when 6 then ret.color = "rgba(0, 0, 200, #{opacity})"
-			when 7 then ret.color = "rgba(0, 200, 0, #{opacity})"
+			when 'bk' then ret.color = "rgba(0, 0, 0, #{opacity})"
+			when 'wh' then ret.color = "rgba(255, 255, 255, #{opacity})"
+			when 're' then ret.color = "rgba(100, 0, 0, #{opacity})"
+			when 'gn' then ret.color = "rgba(0, 100, 0, #{opacity})"
+			when 'bu' then ret.color = "rgba(0, 0, 100, #{opacity})"
 			else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
 
-		ret.fontWeight = parseInt(x_[4]) * 100
-
-		shadow = parseInt x_[5]
-		switch shadow
-			when 0 then # noop
-			when 1 then ret.textShadow = '1px 1px 1px rgba(0,0,0,0.50)'
-			when 2 then ret.textShadow = '1px 2px 0px blue'
-			else throw new Error _ERR + "invalid shadow '#{shadow}' for t: #{x}"
+		ret.fontWeight = parseInt(weight) * 100
 
 		return ret
 
@@ -230,9 +216,14 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		switch m
 
 			when 'box' # e.g. a commonly used box in your design
-				background: '#FEFFEF'
+				backgroundColor: '#FEFFEF'
 				boxShadow: '0 1px 2px 0 rgba(0,0,0,0.37)'
 				borderRadius: 9
+
+			when 'box2' # e.g. a variation
+				backgroundColor: 'red'
+				boxShadow: '1 1px 3px 0 rgba(0,0,0,0.37)'
+				borderRadius: 29
 
 			when 'td' # e.g. a fake td = table cell using flex-box
 				flexGrow: 1
@@ -247,7 +238,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	whs, ove, tov, f, bg, mix}
+	wh, ov, tov, f, bg, mix}
 
 
 

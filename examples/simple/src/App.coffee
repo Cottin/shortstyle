@@ -7,12 +7,13 @@ _ = createElement # shorthand
 
 Basic = require './Basic'
 Fela = require './Fela'
+BasicStr = require './BasicStr'
 
 App = React.createClass
 	render: ->
 		_ {},
 			_ Basic, {}
 			_ Fela, {}
-
+			_ BasicStr, {}
 
 module.exports = App

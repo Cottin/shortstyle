@@ -15,21 +15,23 @@ App = React.createClass
 	render: ->
 		_ {},
 			_ FelaProvider, {renderer: felaRenderer, mountNode: felaMountNode},
-				_ {x: 'c_c', ww: 100, hh: 70, ih: 1000, p: '20% 20%', bg: 'red'},
-					_ {ta:'c', f: 161040}, 'Tired of the standard way of handing styling and css-classes?'
-					_ {hp: 8}
-					_ {ta:'c', f: 152030}, 'Try something else instead!'
-					_ {hp: 2}
-					_ {ta:'c', f: 293060}, 'ShortStyle'
-					_ {hp: 10}
+				_ {x: 'c_c', w: '100vw', h: '70vh', ih: 1000, p: '20% 20%', bg: 'red'},
+					_ {ta:'c', f: 'h9re4'}, 'USING FELA'
+					_ {ta:'c', f: 'h8wh4'}, 'Tired of the standard way of handing styling and 
+					css-classes?'
+					_ {h: '8%'}
+					_ {ta:'c', f: 'h6re3'}, 'Try something else instead!'
+					_ {h: '2%'}
+					_ {ta:'c', f: 'v9gn6'}, 'ShortStyle'
+					_ {h: 10}
 					_ {x: 'r__w'},
 						map renderSquare, range(0,10)
-					_ {hp: 10}
-					_ 'a', {href: 'https://github.com/Cottin/shortstyle', ta:'c', f: 352060},
+					_ {h: 10}
+					_ 'a', {href: 'https://github.com/Cottin/shortstyle', ta:'c', f: 'i5bu6'},
 						'https://github.com/Cottin/shortstyle'
 
 renderSquare = (key) ->
-	_ {key, mix: 'square lined', p: 20, ww: 10, xw: 70, hw: 10, xh: 70, x: 'ccc',
-	f: 153040, m: '3vw'}, ':-)'
+	_ {key, mix: 'square lined', p: 20, w: '10vw', xw: 70, h: '10hw', xh: 70,
+	x: 'ccc', f: 'h5wh4', m: '3vw'}, ':-)'
 
 module.exports = App

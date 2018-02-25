@@ -16,8 +16,8 @@ bot	- bottom
 
 z		- z-index
 ta	- text-align (c = center, l = left, r = right)
-whs	- white-space (n = nowrap, p = pre)
-ove	- overflow (h = hidden)
+wh	- white-space (n = nowrap, p = pre)
+ov	- overflow (h = hidden)
 tov	- text-overflow (e = ellipsis)
 
 

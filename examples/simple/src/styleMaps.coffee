@@ -1,50 +1,44 @@
-{merge, reduce, split, test} = require 'ramda' #auto_require:ramda
+{match, merge, reduce, split} = require 'ramda' #auto_require:ramda
 
 
 _ERR = 'Simple Stylemaps:'
 
 # Overwriting t = text
 f = (x) ->
-	x_ = x + ''
-	if ! test /^\d{6}$/, x_
-		throw new Error "t expects a 6-digit number, given: #{x}, you idiot"
-
 	ret = {}
+	[_, family, size, color, weight] = match /^([a-z])(\d+)([a-z]{2,3})(\d)/, x
 
-	family = x_[0]
-	if family == '1' then ret.fontFamily = 'Helvetica, sans-serif'
-	else if family == '2' then ret.fontFamily = 'Verdana, Arial, sans-serif'
-	else if family == '3' then ret.fontFamily = 'Impact, sans-serif'
-	else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
+	switch family
+		when 'h' then ret.fontFamily = 'Helvetica, sans-serif'
+		when 'v' then ret.fontFamily = 'Verdana, Arial, sans-serif'
+		when 'i' then ret.fontFamily = 'Impact, sans-serif'
+		else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
 
-	size = parseInt x_[1]
-	switch size
+	switch parseInt size
 		when 1 then ret.fontSize = 8 + 'px'
 		when 2 then ret.fontSize = 9 + 'px'
 		when 3 then ret.fontSize = 11 + 'px'
 		when 4 then ret.fontSize = 12 + 'px'
-		when 5 then ret.fontSize = 23 + 'px'
-		when 6 then ret.fontSize = 25 + 'px'
-		when 7 then ret.fontSize = 28 + 'px'
-		when 8 then ret.fontSize = 35 + 'px'
-		when 9 then ret.fontSize = 50 + 'px'
+		when 5 then ret.fontSize = 13 + 'px'
+		when 6 then ret.fontSize = 15 + 'px'
+		when 7 then ret.fontSize = 18 + 'px'
+		when 8 then ret.fontSize = 25 + 'px'
+		when 9 then ret.fontSize = 30 + 'px'
+		when 10 then ret.fontSize = 35 + 'px'
+		when 11 then ret.fontSize = 40 + 'px'
 		else throw new Error _ERR + "invalid size '#{size}' for t: #{x}"
 
-	color = parseInt x_[2]
-	opa = parseInt(x_[3])
-	opacity = if opa == 0 then 1 else opa / 10
+
+	opacity = 1
 	switch color
-		when 1 then ret.color = "rgba(255, 255, 255, #{opacity})"
-		when 2 then ret.color = "rgba(0, 222, 255, #{opacity})"
-		when 3 then ret.color = "rgba(255, 0, 166, #{opacity})"
+		when 'bk' then ret.color = "rgba(0, 0, 0, #{opacity})"
+		when 'wh' then ret.color = "rgba(255, 255, 255, #{opacity})"
+		when 're' then ret.color = "rgba(255, 0, 0, #{opacity})"
+		when 'gn' then ret.color = "rgba(0, 255, 0, #{opacity})"
+		when 'bu' then ret.color = "rgba(0, 0, 255, #{opacity})"
 		else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
 
-	ret.fontWeight = parseInt(x_[4]) * 100
-
-	shadow = parseInt x_[5]
-	switch shadow
-		when 0 then # noop
-		else throw new Error _ERR + "invalid shadow '#{shadow}' for t: #{x}"
+	ret.fontWeight = parseInt(weight) * 100
 
 	return ret
 
