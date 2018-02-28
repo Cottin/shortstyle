@@ -7,12 +7,12 @@ _ = createElement # shorthand
 
 Basic = React.createClass
 	render: ->
-		_ {x: 'c_c', w: '100vw', h: '70vh', ih: 1000, p: '20% 20%', bg: 'blue'},
-			_ {ta:'c', f: 'h9re4'}, 'BASIC'
-			_ {ta:'c', f: 'h8wh4'}, 'Tired of the standard way of handing styling and 
+		_ {x: 'c_c', w: '100vw', h: '70vh', ih: 1000, p: '20% 20%', bg: 'blue', f: 'h___4'},
+			_ {ta:'c', f: '_9re_'}, 'BASIC'
+			_ {ta:'c', f: '_8wh_'}, 'Tired of the standard way of handing styling and 
 			css-classes?'
 			_ {h: '8%'}
-			_ {ta:'c', f: 'h6re3'}, 'Try something else instead!'
+			_ {ta:'c', f: '_6re3'}, 'Try something else instead!'
 			_ {h: '2%'}
 			_ {ta:'c', f: 'v9gn6'}, 'ShortStyle'
 			_ {h: 10}

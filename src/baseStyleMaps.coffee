@@ -1,4 +1,4 @@
-{empty, join, map, match, merge, repeat, reverse, split, type} = require 'ramda' #auto_require:ramda
+{__, empty, join, map, match, merge, repeat, reverse, split, type} = require 'ramda' #auto_require:ramda
 {cc, freduce} = require 'ramda-extras' #auto_require:ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -160,26 +160,28 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	# font
 	f = (x) ->
 		ret = {}
-		[_, family, size, color, weight] = match /^([a-z])(\d+)([a-z]{2,3})(\d)/, x
+		[_, family, size, color, weight] = match /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])/, x
 
 		switch family
 			when 't' then ret.fontFamily = 'Times New Roman, Times, serif'
 			when 'a' then ret.fontFamily = 'Arial, Helvetica, sans-serif'
 			when 'c' then ret.fontFamily = 'Comic Sans MS, cursive, sans-serif'
+			when '_' then # no-op
 			else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
 
-		switch parseInt size
-			when 1 then ret.fontSize = 8 + 'px'
-			when 2 then ret.fontSize = 9 + 'px'
-			when 3 then ret.fontSize = 11 + 'px'
-			when 4 then ret.fontSize = 12 + 'px'
-			when 5 then ret.fontSize = 13 + 'px'
-			when 6 then ret.fontSize = 15 + 'px'
-			when 7 then ret.fontSize = 18 + 'px'
-			when 8 then ret.fontSize = 25 + 'px'
-			when 9 then ret.fontSize = 30 + 'px'
-			when 10 then ret.fontSize = 35 + 'px'
-			when 11 then ret.fontSize = 40 + 'px'
+		switch size
+			when '1' then ret.fontSize = 8 + 'px'
+			when '2' then ret.fontSize = 9 + 'px'
+			when '3' then ret.fontSize = 11 + 'px'
+			when '4' then ret.fontSize = 12 + 'px'
+			when '5' then ret.fontSize = 13 + 'px'
+			when '6' then ret.fontSize = 15 + 'px'
+			when '7' then ret.fontSize = 18 + 'px'
+			when '8' then ret.fontSize = 25 + 'px'
+			when '9' then ret.fontSize = 30 + 'px'
+			when '10' then ret.fontSize = 35 + 'px'
+			when '11' then ret.fontSize = 40 + 'px'
+			when '_' then # no-op
 			else throw new Error _ERR + "invalid size '#{size}' for t: #{x}"
 
 
@@ -190,9 +192,11 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 're' then ret.color = "rgba(100, 0, 0, #{opacity})"
 			when 'gn' then ret.color = "rgba(0, 100, 0, #{opacity})"
 			when 'bu' then ret.color = "rgba(0, 0, 100, #{opacity})"
+			when '__' then # no-op
 			else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
 
-		ret.fontWeight = parseInt(weight) * 100
+		if weight != '_'
+			ret.fontWeight = parseInt(weight) * 100
 
 		return ret
 

@@ -1,6 +1,6 @@
 {
   "name": "shortstyle",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Concise way of writing styles as properties",
   "main": "lib/shortstyle.js",
   "scripts": {

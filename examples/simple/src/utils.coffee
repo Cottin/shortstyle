@@ -1,11 +1,13 @@
-{merge, none, props, type} = require 'ramda' #auto_require:ramda
+{merge, props, type} = require 'ramda' #auto_require:ramda
 React = require 'react'
 shortstyle = require 'shortstyle'
 
 styleMaps = require './styleMaps'
 attrMaps = require './attrMaps'
 
-_calculateProps = shortstyle styleMaps, attrMaps
+_calculateProps = shortstyle styleMaps, attrMaps, (x) ->
+	if type(x) == 'Number' then x/10 + 'em'
+	else x
 
 # Runs supplied props through shortstyle and calls React.createElement
 createElement = ->

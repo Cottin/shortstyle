@@ -9,9 +9,8 @@ parseS = (s) ->
 	props = {}
 	mixins = []
 	for x in xs
-		if test /^([a-z])(\d+)([a-z]{2,3})(\d)/, x then props.f = x
 
-		else if test /^z/, x then props.z = tryParseNum match(/^z(.*)/, x)[1]
+		if test /^z/, x then props.z = tryParseNum match(/^z(.*)/, x)[1]
 		else if test /^ta/, x then props.ta = match(/^ta(.*)/, x)[1]
 		else if test /^wh/, x then props.wh = match(/^wh(.*)/, x)[1]
 		else if test /^ov/, x then props.ov = match(/^ov(.*)/, x)[1]
@@ -35,6 +34,8 @@ parseS = (s) ->
 		else if test /^p/, x then props.p = replace /_/g, ' ', match(/^p(.*)/, x)[1]
 
 		else if test(/^r/, x) || test(/^c/, x) then props.x = x
+		else if test /^f([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])/, x
+			props.f = replace /^f/, '', x
 
 		else if test /^bg/, x then props.bg = match(/^bg(.*)/, x)[1]
 		else if test /^_/, x then mixins.push match(/^_(.*)/, x)[1]
