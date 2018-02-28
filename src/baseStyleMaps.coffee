@@ -209,6 +209,9 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 				backgroundImage: 'url(/public/img/bg.png)'
 				backgroundRepeat: 'repeat-x'
 				backgroundSize: 'contain'
+			when 'lime' then {backgroundColor: 'lime'}
+			when 'teal' then {backgroundColor: 'teal'}
+			when 'red' then {backgroundColor: 'red'}
 			else throw new Error _ERR + "invalid background '#{x}'"
 
 

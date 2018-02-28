@@ -55,6 +55,8 @@ bg = (x) ->
 			boxShadow: '0 2px 3px 1px rgba(0,0,0,0.40)'
 		when 'red'
 			backgroundImage: 'linear-gradient(0deg, #DC6237 1%, #EA9E3A 99%)'
+		when 'lime' then {backgroundColor: 'lime'}
+		when 'teal' then {backgroundColor: 'teal'}
 		else throw new Error _ERR + "invalid background '#{x}'"
 
 mix = (x) ->

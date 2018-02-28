@@ -87,9 +87,6 @@ shortstyle = (styleMaps = {}, attrMaps = {}, unit) -> (props) ->
 
 		else props_[k] = v
 
-	# existing style last since it has highest prio
-	if props?.style then Object.assign style_, props.style
-
 	return [props_, style_]
 
 module.exports = shortstyle

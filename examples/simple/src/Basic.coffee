@@ -14,6 +14,8 @@ Basic = React.createClass
 			_ {h: '8%'}
 			_ {ta:'c', f: '_6re3'}, 'Try something else instead!'
 			_ {h: '2%'}
+			_ {w: 10, h: 10, style: {width: 13}, bg: 'lime'}
+			_ {h: '2%'}
 			_ {ta:'c', f: 'v9gn6'}, 'ShortStyle'
 			_ {h: 10}
 			_ {x: 'r__w'},

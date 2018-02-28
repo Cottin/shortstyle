@@ -14,6 +14,8 @@ Basic = React.createClass
 			_ {s: 'h8%'}
 			_ {s: 'tac fh6re3'}, 'Try something else instead!'
 			_ {s: 'h2%'}
+			_ {s: 'w10 h10 bglime', style: {width: 13}}
+			_ {s: 'h2%'}
 			_ {s: 'tac fv9gn6'}, 'ShortStyle'
 			_ {s: 'h10%'}
 			_ {s: 'r__w'},
