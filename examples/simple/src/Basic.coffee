@@ -2,8 +2,8 @@ React = require 'react'
 {div, a, br, textarea, pre, input, ul, li} = React.DOM
 {map, range} = require 'ramda' #auto_require:ramda
 
-{createElement} = require './utils'
-_ = createElement # shorthand
+{createElementHelper} = require './utils'
+_ = createElementHelper() # shorthand
 
 Basic = React.createClass
 	render: ->

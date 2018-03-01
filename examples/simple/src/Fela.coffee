@@ -4,10 +4,10 @@ React = require 'react'
 fela = require 'fela'
 {Provider: FelaProvider} = require 'react-fela'
 
-{createElementFela} = require './utils'
+{createElementHelper} = require './utils'
 
 felaRenderer = fela.createRenderer()
-_ = createElementFela(felaRenderer) # shorthand
+_ = createElementHelper(felaRenderer) # shorthand
 
 felaMountNode = document.getElementById('stylesheet')
 
