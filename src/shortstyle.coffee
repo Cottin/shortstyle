@@ -17,7 +17,7 @@ parseS = (s) ->
 		else if test /^ov/, x then props.ov = match(/^ov(.*)/, x)[1]
 		else if test /^tov/, x then props.tov = match(/^tov(.*)/, x)[1]
 
-		else if test /^pos/, x then props.xw = match(/^pos(.*)/, x)[1]
+		else if test /^pos/, x then props.pos = match(/^pos(.*)/, x)[1]
 		else if test /^lef/, x then props.lef = tryParseNum match(/^lef(.*)/, x)[1]
 		else if test /^rig/, x then props.rig = tryParseNum match(/^rig(.*)/, x)[1]
 		else if test /^top/, x then props.top = tryParseNum match(/^top(.*)/, x)[1]
