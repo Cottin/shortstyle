@@ -59,7 +59,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		if type(v) != 'String' || v == ''
 			throw new Error _ERR + 'x expects a non-empty string'
 
-		ret = {}
+		ret = {display: 'flex'}
 
 		di = v[0]
 		if di == 'r' then ret.flexDirection = 'row'
@@ -233,6 +233,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 				borderRadius: 29
 
 			when 'td' # e.g. a fake td = table cell using flex-box
+				display: 'flex'
 				flexGrow: 1
 				flexBasis: 0
 				minWidth: 0
