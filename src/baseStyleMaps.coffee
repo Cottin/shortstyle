@@ -116,7 +116,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		switch x
 			when 'c' then textAlign: 'center'
 			when 'l' then textAlign: 'left'
-			when 'r' then textAlign: 'rigth'
+			when 'r' then textAlign: 'right'
 			else throw new Error _ERR + "ta (text-align) expects c, l or r,
 			given: #{x}"
 
