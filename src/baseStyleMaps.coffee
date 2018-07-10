@@ -160,6 +160,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	# font
 	f = (x) ->
 		ret = {}
+		if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
 		[_, family, size, color, weight] = match /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])/, x
 
 		switch family
