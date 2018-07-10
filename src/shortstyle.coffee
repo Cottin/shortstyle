@@ -35,7 +35,7 @@ parseS = (s) ->
 		else if test /^p/, x then props.p = replace /_/g, ' ', match(/^p(.*)/, x)[1]
 
 		else if test(/^r/, x) || test(/^c/, x) then props.x = x
-		else if test /^f([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])/, x
+		else if test /^f([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])?/, x
 			props.f = replace /^f/, '', x
 
 		else if test /^bg/, x then props.bg = match(/^bg(.*)/, x)[1]
