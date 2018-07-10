@@ -1,4 +1,4 @@
-{__, empty, join, map, match, merge, repeat, reverse, split, type} = require 'ramda' #auto_require:ramda
+{__, empty, join, map, match, merge, repeat, reverse, split, test, type} = require 'ramda' #auto_require:ramda
 {cc, freduce} = require 'ramda-extras' #auto_require:ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -161,7 +161,10 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	f = (x) ->
 		ret = {}
 		if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
-		[_, family, size, color, weight] = match /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])/, x
+		
+		RE = /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])?$/
+		if ! test RE, x then throw new Error _ERR + "Invalid string given for font: #{x}"
+		[_, family, size, color, weight] = match RE, x
 
 		switch family
 			when 't' then ret.fontFamily = 'Times New Roman, Times, serif'
@@ -196,8 +199,10 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when '__' then # no-op
 			else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
 
-		if weight != '_'
-			ret.fontWeight = parseInt(weight) * 100
+		switch weight
+			when '_' then # noop
+			when undefined then # noop
+			else ret.fontWeight = parseInt(weight) * 100
 
 		return ret
 
