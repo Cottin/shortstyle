@@ -8,7 +8,7 @@ f = (x) ->
 	ret = {}
 	if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
 
-	RE = /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])?$/
+	RE = /^([a-z_])([\d]{1,2}|_)([a-z]{2,3}|__)([\d_])?$/
 	if ! test RE, x then throw new Error _ERR + "Invalid string given for font: #{x}"
 	[_, family, size, color, weight] = match RE, x
 
@@ -52,19 +52,6 @@ f = (x) ->
 
 	return ret
 
-bg = (x) ->
-	switch x
-		when 'blue'
-			backgroundImage: 'linear-gradient(0deg, #424C7F 1%, #57427F 99%)'
-		when 'purple'
-			background: '#6F497F'
-			boxShadow: '0 2px 3px 1px rgba(0,0,0,0.40)'
-		when 'red'
-			backgroundImage: 'linear-gradient(0deg, #DC6237 1%, #EA9E3A 99%)'
-		when 'lime' then {backgroundColor: 'lime'}
-		when 'teal' then {backgroundColor: 'teal'}
-		else throw new Error _ERR + "invalid background '#{x}'"
-
 mix = (x) ->
 	mixins = split ' ', x
 	mergeM = (mem, m) -> merge mem, _mixins(m)
@@ -81,7 +68,17 @@ _mixins = (m) ->
 		when 'lined' # e.g. a commonly used box in your design
 			border: '5px solid pink'
 
+		when 'blue'
+			backgroundImage: 'linear-gradient(0deg, #424C7F 1%, #57427F 99%)'
+		when 'purple'
+			background: '#6F497F'
+			boxShadow: '0 2px 3px 1px rgba(0,0,0,0.40)'
+		when 'red'
+			backgroundImage: 'linear-gradient(0deg, #DC6237 1%, #EA9E3A 99%)'
+		when 'lime' then {backgroundColor: 'lime'}
+		when 'teal' then {backgroundColor: 'teal'}
+
 		else throw new Error _ERR + "invalid mixin '#{m}'"
 
 #auto_export:none_
-module.exports = {f, bg, mix}
+module.exports = {f, mix}

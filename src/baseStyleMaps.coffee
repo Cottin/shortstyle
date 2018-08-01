@@ -1,4 +1,4 @@
-{__, empty, join, map, match, merge, repeat, reverse, split, test, type} = require 'ramda' #auto_require:ramda
+{__, empty, join, map, match, merge, replace, reverse, split, test, type} = require 'ramda' #auto_require:ramda
 {cc, freduce} = require 'ramda-extras' #auto_require:ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -40,7 +40,9 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		else {"#{key}": cc join(' '), map(unit), map(tryParseNum), split(' '), x}
 
 	m = _oneTwoFour 'margin'
+	m.refine = (x) -> replace /_/g, ' ', x
 	p = _oneTwoFour 'padding'
+	p.refine = (x) -> replace /_/g, ' ', x
 
 
 	##### NON-UNIT BASED
@@ -162,7 +164,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		ret = {}
 		if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
 		
-		RE = /^([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])?$/
+		RE = /^([a-z_])([\d]{1,2}|_)([a-z]{2,3}|__)([\d_])?$/
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for font: #{x}"
 		[_, family, size, color, weight] = match RE, x
 
@@ -196,6 +198,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 're' then ret.color = "rgba(100, 0, 0, #{opacity})"
 			when 'gn' then ret.color = "rgba(0, 100, 0, #{opacity})"
 			when 'bu' then ret.color = "rgba(0, 0, 100, #{opacity})"
+			when 'lbu' then ret.color = "rgba(110, 200, 250, #{opacity})"
 			when '__' then # no-op
 			else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
 
@@ -205,20 +208,6 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			else ret.fontWeight = parseInt(weight) * 100
 
 		return ret
-
-
-	bg = (x) ->
-		switch x
-			when 'a1' then {backgroundColor: 'blue'}
-			when 'a2' then {backgroundColor: 'light-blue'}
-			when 'b'
-				backgroundImage: 'url(/public/img/bg.png)'
-				backgroundRepeat: 'repeat-x'
-				backgroundSize: 'contain'
-			when 'lime' then {backgroundColor: 'lime'}
-			when 'teal' then {backgroundColor: 'teal'}
-			when 'red' then {backgroundColor: 'red'}
-			else throw new Error _ERR + "invalid background '#{x}'"
 
 
 	mix = (x) ->
@@ -252,7 +241,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	wh, ov, tov, f, bg, mix}
+	wh, ov, tov, f, mix}
 
 
 

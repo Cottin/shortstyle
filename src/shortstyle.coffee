@@ -1,45 +1,23 @@
-{isEmpty, isNil, join, match, merge, props, replace, split, test, type} = require 'ramda' #auto_require:ramda
-{fchange} = require 'ramda-extras' #auto_require:ramda-extras
+{identity, isEmpty, isNil, join, keys, length, match, merge, props, reverse, sortBy, split, test, type} = require 'ramda' #auto_require:ramda
+{fchange, cc} = require 'ramda-extras' #auto_require:ramda-extras
 
 getBaseStyleMaps = require './baseStyleMaps'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-parseS = (s) ->
+parseS = (keysByLength, allStyleMaps) -> (s) ->
 	xs = split ' ', s
 	props = {}
 	mixins = []
 	for x in xs
-
-		if test /^z/, x then props.z = tryParseNum match(/^z(.*)/, x)[1]
-		else if test /^ta/, x then props.ta = match(/^ta(.*)/, x)[1]
-		else if test /^wh/, x then props.wh = match(/^wh(.*)/, x)[1]
-		else if test /^ov/, x then props.ov = match(/^ov(.*)/, x)[1]
-		else if test /^tov/, x then props.tov = match(/^tov(.*)/, x)[1]
-
-		else if test /^pos/, x then props.pos = match(/^pos(.*)/, x)[1]
-		else if test /^lef/, x then props.lef = tryParseNum match(/^lef(.*)/, x)[1]
-		else if test /^rig/, x then props.rig = tryParseNum match(/^rig(.*)/, x)[1]
-		else if test /^top/, x then props.top = tryParseNum match(/^top(.*)/, x)[1]
-		else if test /^bot/, x then props.bot = tryParseNum match(/^bot(.*)/, x)[1]
-
-		else if test /^ih/, x then props.ih = tryParseNum match(/^ih(.*)/, x)[1]
-		else if test /^xh/, x then props.xh = tryParseNum match(/^xh(.*)/, x)[1]
-		else if test /^iw/, x then props.iw = tryParseNum match(/^iw(.*)/, x)[1]
-		else if test /^xw/, x then props.xw = tryParseNum match(/^xw(.*)/, x)[1]
-
-		else if test /^h/, x then props.h = tryParseNum match(/^h(.*)/, x)[1]
-		else if test /^w/, x then props.w = tryParseNum match(/^w(.*)/, x)[1]
-			
-		else if test /^m/, x then props.m = replace /_/g, ' ', match(/^m(.*)/, x)[1]
-		else if test /^p/, x then props.p = replace /_/g, ' ', match(/^p(.*)/, x)[1]
-
-		else if test(/^r/, x) || test(/^c/, x) then props.x = x
-		else if test /^f([a-z_])([\d_]{1,2})([a-z_]{2,3})([\d_])?/, x
-			props.f = replace /^f/, '', x
-
-		else if test /^bg/, x then props.bg = match(/^bg(.*)/, x)[1]
-		else if test /^_/, x then mixins.push match(/^_(.*)/, x)[1]
+		if test /^_/, x
+			mixins.push match(/^_(.*)/, x)[1]
+			continue
+		for k in keysByLength
+			if test new RegExp("^#{k}"), x
+				refine = allStyleMaps[k].refine || identity
+				props[k] = cc tryParseNum, refine, match(new RegExp("^#{k}(.*)"), x)[1]
+				break
 
 	if ! isEmpty mixins then props.mix = join ' ', mixins
 
@@ -52,12 +30,18 @@ parseS = (s) ->
 # pair back of [calculatedProperties, calculatedStyle]
 shortstyle = (styleMaps = {}, attrMaps = {}, unit) ->
 
+	baseStyleMaps = getBaseStyleMaps unit
+
+	allStyleMaps = merge baseStyleMaps, styleMaps
+	keysByLength = cc reverse, sortBy(length), keys, allStyleMaps
+
+	parseS_ = parseS(keysByLength, allStyleMaps)
+
 	calcProps = (props) ->
 		style_ = {}
 		props_ = {}
-		baseStyleMaps = getBaseStyleMaps unit
 
-		propsWithS = merge parseS(props?.s || ''), props
+		propsWithS = merge parseS_(props?.s || ''), props
 		delete propsWithS.s
 
 		# give mix lower prio by doing it first
@@ -90,7 +74,7 @@ shortstyle = (styleMaps = {}, attrMaps = {}, unit) ->
 
 			else props_[k] = v
 
-		return [props_, style_]
+		return [props_, merge(style_, props.style || {})]
 
 	createElementHelper = (felaRenderer) -> ->
 		[a0]  = arguments

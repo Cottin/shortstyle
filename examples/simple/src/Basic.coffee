@@ -7,14 +7,14 @@ _ = createElementHelper() # shorthand
 
 Basic = React.createClass
 	render: ->
-		_ {x: 'c_c', w: '100vw', h: '70vh', ih: 1000, p: '20% 20%', bg: 'blue', f: 'h___4'},
+		_ {x: 'c_c', w: '100vw', h: '70vh', ih: 1000, p: '20% 20%', mix: 'blue', f: 'h4___'},
 			_ {ta:'c', f: '_9re_'}, 'BASIC'
 			_ {ta:'c', f: '_8wh_'}, 'Tired of the standard way of handing styling and 
 			css-classes?'
 			_ {h: '8%'}
 			_ {ta:'c', f: '_6re3'}, 'Try something else instead!'
 			_ {h: '2%'}
-			_ {w: 10, h: 10, style: {width: 13}, bg: 'lime'}
+			_ {w: 10, h: 10, style: {width: 13}, mix: 'lime'}
 			_ {h: '2%'}
 			_ {ta:'c', f: 'v9gn6'}, 'ShortStyle'
 			_ {h: 10}
