@@ -1,5 +1,5 @@
 assert = require 'assert'
-{__, prop, props, type} = require 'ramda' #auto_require:ramda
+{__, empty, prop, props, type} = require 'ramda' #auto_require:ramda
 {} = require 'ramda-extras' #auto_require:ramda-extras
 {deepEq, fdeepEq} = require 'testhelp' #auto_require:testhelp
 
@@ -14,6 +14,10 @@ shortstyle = require './shortstyle'
 describe 'shortstyle', ->
 
 	describe 'as string', ->
+
+		describe 'edge cases', ->
+			it 'empty props', -> deepEq [{}, {}], short({})
+			it 'undefined props', -> deepEq [{}, {}], short(undefined)
 
 		describe 'h = height', ->
 			it 'default unit', -> deepEq [{}, {height: '87px'}], short({s: 'h87'})

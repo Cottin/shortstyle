@@ -74,7 +74,7 @@ shortstyle = (styleMaps = {}, attrMaps = {}, unit) ->
 
 			else props_[k] = v
 
-		return [props_, merge(style_, props.style || {})]
+		return [props_, merge(style_, props?.style || {})]
 
 	createElementHelper = (felaRenderer) -> ->
 		[a0]  = arguments
