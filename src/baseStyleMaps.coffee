@@ -44,6 +44,16 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	p = _oneTwoFour 'padding'
 	p.refine = (x) -> replace /_/g, ' ', x
 
+	mt = (x) -> {marginTop: unit(x)}
+	mb = (x) -> {marginBottom: unit(x)}
+	ml = (x) -> {marginLeft: unit(x)}
+	mr = (x) -> {marginRight: unit(x)}
+
+	pt = (x) -> {paddingTop: unit(x)}
+	pb = (x) -> {paddingBottom: unit(x)}
+	pl = (x) -> {paddingLeft: unit(x)}
+	pr = (x) -> {paddingRight: unit(x)}
+
 
 	##### NON-UNIT BASED
 
@@ -241,7 +251,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	wh, ov, tov, f, mix}
+	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr}
 
 
 

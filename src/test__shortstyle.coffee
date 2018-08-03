@@ -42,6 +42,16 @@ describe 'shortstyle', ->
 
 			it 'two', -> deepEq [{}, {margin: '1px 10vh'}], short({s: 'm1_10vh'})
 
+			it 'mt', -> deepEq [{}, {marginTop: '10vh'}], short({s: 'mt10vh'})
+			it 'mb', -> deepEq [{}, {marginBottom: '10vh'}], short({s: 'mb10vh'})
+			it 'ml', -> deepEq [{}, {marginLeft: '10vh'}], short({s: 'ml10vh'})
+			it 'mr', -> deepEq [{}, {marginRight: '10vh'}], short({s: 'mr10vh'})
+
+			it 'pt', -> deepEq [{}, {paddingTop: '10vh'}], short({s: 'pt10vh'})
+			it 'pb', -> deepEq [{}, {paddingBottom: '10vh'}], short({s: 'pb10vh'})
+			it 'pl', -> deepEq [{}, {paddingLeft: '10vh'}], short({s: 'pl10vh'})
+			it 'pr', -> deepEq [{}, {paddingRight: '10vh'}], short({s: 'pr10vh'})
+
 		describe 'wh = whitespace', ->
 			it 'simple', -> deepEq [{}, {whiteSpace: 'nowrap'}], short({s: 'whn'})
 
