@@ -19,6 +19,9 @@ describe 'shortstyle', ->
 			it 'empty props', -> deepEq [{}, {}], short({})
 			it 'undefined props', -> deepEq [{}, {}], short(undefined)
 
+		describe 's_', ->
+			it 'simple case', -> deepEq [{s: 'tac'}, {}], short({s_: 'tac'})
+
 		describe 'h = height', ->
 			it 'default unit', -> deepEq [{}, {height: '87px'}], short({s: 'h87'})
 			it 'string', -> deepEq [{}, {height: '87%'}], short({s: 'h87%'})

@@ -44,6 +44,11 @@ shortstyle = (styleMaps = {}, attrMaps = {}, unit) ->
 		propsWithS = merge parseS_(props?.s || ''), props
 		delete propsWithS.s
 
+		# pass along s_ to the child to handle
+		if props?.s_
+			props_.s = props.s_
+			delete propsWithS.s_
+
 		# give mix lower prio by doing it first
 		if propsWithS.mix
 			if styleMaps['mix']
