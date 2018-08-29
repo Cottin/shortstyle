@@ -60,6 +60,9 @@ describe 'shortstyle', ->
 			it 'four', ->
 				deepEq [{}, {borderRadius: '0px 10px 2px 3px'}], short({s: 'br0_10_2_3'})
 
+		describe 'xg = flexgrow', ->
+			it 'simple', -> deepEq [{}, {flexGrow: 2}], short({s: 'xg2'})
+
 		# describe 'bg = background', ->
 		# 	it 'simple cases', ->
 		# 		deepEq [{}, {backgroundColor: 'blue'}], short({s: 'bga1'})

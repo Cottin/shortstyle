@@ -126,6 +126,8 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 		return ret
 
+	xg = (x) -> {flexGrow: parseInt x}
+
 	# text-align
 	ta = (x) ->
 		switch x
@@ -259,7 +261,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr, br}
+	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr, br, xg}
 
 
 
