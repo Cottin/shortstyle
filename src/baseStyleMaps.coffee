@@ -54,6 +54,9 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	pl = (x) -> {paddingLeft: unit(x)}
 	pr = (x) -> {paddingRight: unit(x)}
 
+	# border-radius
+	br = _oneTwoFour 'borderRadius'
+	br.refine = (x) -> replace /_/g, ' ', x
 
 	##### NON-UNIT BASED
 
@@ -174,7 +177,12 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		ret = {}
 		if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
 		
-		RE = /^([a-z_])([\d]{1,2}|_)([a-z]{2,3}|__)([\d_])?$/
+		RE = ///^
+		([a-z_]) # family
+		([\d]{1,2}|_) # size
+		([a-z]{2,3}|__) # color
+		([\d_])? # weight
+		$///
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for font: #{x}"
 		[_, family, size, color, weight] = match RE, x
 
@@ -251,7 +259,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr}
+	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr, br}
 
 
 

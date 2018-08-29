@@ -55,6 +55,11 @@ describe 'shortstyle', ->
 		describe 'wh = whitespace', ->
 			it 'simple', -> deepEq [{}, {whiteSpace: 'nowrap'}], short({s: 'whn'})
 
+		describe 'br = border-radius', ->
+			it 'simple', -> deepEq [{}, {borderRadius: '87px'}], short({s: 'br87'})
+			it 'four', ->
+				deepEq [{}, {borderRadius: '0px 10px 2px 3px'}], short({s: 'br0_10_2_3'})
+
 		# describe 'bg = background', ->
 		# 	it 'simple cases', ->
 		# 		deepEq [{}, {backgroundColor: 'blue'}], short({s: 'bga1'})
