@@ -1,112 +1,72 @@
-{identity, isEmpty, isNil, join, keys, length, match, merge, props, reverse, sortBy, split, test, type} = require 'ramda' #auto_require:ramda
-{fchange, cc} = require 'ramda-extras' #auto_require:ramda-extras
+{contains, fromPairs, identity, isNil, last, map, match, merge, nth, split, toPairs} = R = require 'ramda' #auto_require: ramda
+{$} = RE = require 'ramda-extras' #auto_require: ramda-extras
+[] = [] #auto_sugar
+qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
+qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
+_ = (...xs) -> xs
 
 getBaseStyleMaps = require './baseStyleMaps'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-parseS = (keysByLength, allStyleMaps) -> (s) ->
-	xs = split ' ', s
-	props = {}
-	mixins = []
-	for x in xs
-		if test /^_/, x
-			mixins.push match(/^_(.*)/, x)[1]
-			continue
-		for k in keysByLength
-			if test new RegExp("^#{k}"), x
-				refine = allStyleMaps[k].refine || identity
-				props[k] = cc tryParseNum, refine, match(new RegExp("^#{k}(.*)"), x)[1]
-				break
+_selectors =
+	f: ':first-child'
+	l: ':last-child' 
+	e: ':nth-child(even)'
+	o: ':nth-child(odd)'
+	ho: ':hover'
+	fo: ':focus'
+	'2l': ':nth-last-child(2)'
 
-	if ! isEmpty mixins then props.mix = join ' ', mixins
-
-	return props
+selectors = $ _selectors, toPairs, map(([k, v]) -> ['n'+k, ":not(#{v})"]), fromPairs, merge _selectors
 
 
-# o, o -> o -> [o, o]
-# Supply your own styleMaps and attrMaps and get a transformation function back.
-# Call that transformation function with properties for an element and get a
-# pair back of [calculatedProperties, calculatedStyle]
-shortstyle = (styleMaps = {}, attrMaps = {}, unit) ->
-
+# Takes styleMaps and unit function and returns parse and createElementHelper
+shortstyle = (styleMaps = {}, unit) ->
 	baseStyleMaps = getBaseStyleMaps unit
 
 	allStyleMaps = merge baseStyleMaps, styleMaps
-	keysByLength = cc reverse, sortBy(length), keys, allStyleMaps
-
-	parseS_ = parseS(keysByLength, allStyleMaps)
-
-	calcProps = (props) ->
-		style_ = {}
-		props_ = {}
-
-		propsWithS = merge parseS_(props?.s || ''), props
-		delete propsWithS.s
-
-		# pass along s_ to the child to handle
-		if props?.s_
-			props_.s = props.s_
-			delete propsWithS.s_
-
-		# give mix lower prio by doing it first
-		if propsWithS.mix
-			if styleMaps['mix']
-				Object.assign style_, styleMaps['mix'](propsWithS.mix)
-
-			else if baseStyleMaps['mix']
-				Object.assign style_, baseStyleMaps['mix'](propsWithS.mix)
-
-			delete propsWithS.mix
 
 
-		for k,v of propsWithS
-			if isNil v then continue
+	memo = {}
 
-			else if styleMaps[k]
-				if !isNil v then Object.assign style_, styleMaps[k](v)
+	return (str) ->
+		if isNil str then return {}
+		if memo[str] then return memo[str]
+		
+		style = {}
+		ss = split ' ', str
 
-			else if attrMaps[k]
-				if !isNil v then Object.assign props_, attrMaps[k](v)
+		for s in ss
+			if s == '' || s == 'false' || s == 'true' || s == 'undefined' || s == 'null' then continue
 
-			else if baseStyleMaps[k]
-				if !isNil v then Object.assign style_, baseStyleMaps[k](v)
-
-			else if test /^\$/, k
-				# escape if you want to use property that colides with the transformers
-				# e.g. instead of MyComp {to: 1} which will fail, do MyComp {$to: 1}
-				props_[k.substr(1)] = v
-
-			else props_[k] = v
-
-		return [props_, merge(style_, props?.style || {})]
-
-	createElementHelper = (felaRenderer) -> ->
-		[a0]  = arguments
-
-		if type(a0) == 'Object'
-			comp = 'div'
-			props = a0
-			children = Array.prototype.splice.call(arguments, 1)
-		else
-			comp = a0 # either a string or a component, eg. 'span' or Icon
-			props = arguments[1]
-			children = Array.prototype.splice.call(arguments, 2)
-
-		[props_, style_] = calcProps props
-
-		props__ =
-			if felaRenderer
-				className_ = felaRenderer.renderRule (-> style_), {}
-				fchange props_,
-					className: (c) -> if c then c + ' ' + className_ else className_
+			if allStyleMaps[s[0] + s[1] + s[2] + s[3]] then k = s[0] + s[1] + s[2] + s[3]
+			else if allStyleMaps[s[0] + s[1] + s[2]] then k = s[0] + s[1] + s[2]
+			else if allStyleMaps[s[0] + s[1]] then k = s[0] + s[1]
+			else if allStyleMaps[s[0]] then k = s[0]
+			else if allStyleMaps[s] then k = s
 			else
-				fchange props_, style: (s) -> if s then merge style_, s else style_
+				console.warn "invalid shortstyle: #{s}"
+				return {}
 
-		return [comp, props__, children]
+			v = s.substr k.length
 
-	return {calcProps, createElementHelper}
+			if contains ':', v
+				[___, v2, sel] = match /^(.*):(.*)/, v
+				selector = selectors[sel]
+				if ! selector then console.warn "invalid selector: #{sel}"
+				else
+					style[selector] ?= {}
+					val = $ v2, allStyleMaps[k].refine || identity, tryParseNum
+					Object.assign style[selector], allStyleMaps[k](val)
+			else
+				val = $ v, allStyleMaps[k].refine || identity, tryParseNum
+				Object.assign style, allStyleMaps[k](val)
+
+		memo[str] = style
+
+		return style
+
 
 module.exports = shortstyle
-
 

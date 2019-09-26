@@ -1,18 +1,18 @@
-{__, empty, join, map, match, merge, replace, reverse, split, test, type} = require 'ramda' #auto_require:ramda
-{cc, freduce} = require 'ramda-extras' #auto_require:ramda-extras
+{__, empty, join, map, match, replace, reverse, split, test, type} = require 'ramda' #auto_require: ramda
+{cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
 
-##### Probably no need to override:
+###### Probably no need to override:
 
 defaultUnit = (x) ->
-	if type(x) == 'Number' then x + 'px'
+	if 'Number' == type x then x + 'px'
 	else x
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
 getBaseStyleMaps = (unit = defaultUnit) ->
-	##### UNIT BASED
+	###### UNIT BASED
 
 	# height
 	h = (x) -> {height: unit(x)}
@@ -56,9 +56,9 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 	# border-radius
 	br = _oneTwoFour 'borderRadius'
-	br.refine = (x) -> replace /_/g, ' ', x
+	br.refine = (x) -> replace /_/g, ' ', unit(x)
 
-	##### NON-UNIT BASED
+	###### NON-UNIT BASED
 
 	# position
 	pos = (x) ->
@@ -127,6 +127,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		return ret
 
 	xg = (x) -> {flexGrow: parseInt x}
+	xs = (x) -> {flexShrink: parseInt x}
 
 	# text-align
 	ta = (x) ->
@@ -229,39 +230,8 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 		return ret
 
-
-	mix = (x) ->
-		mixins = split ' ', x
-		freduce mixins, {}, (mem, m) -> merge mem, _mixins(m)
-
-	_mixins = (m) ->
-		switch m
-
-			when 'box' # e.g. a commonly used box in your design
-				backgroundColor: '#FEFFEF'
-				boxShadow: '0 1px 2px 0 rgba(0,0,0,0.37)'
-				borderRadius: 9
-
-			when 'box2' # e.g. a variation
-				backgroundColor: 'red'
-				boxShadow: '1 1px 3px 0 rgba(0,0,0,0.37)'
-				borderRadius: 29
-
-			when 'td' # e.g. a fake td = table cell using flex-box
-				display: 'flex'
-				flexGrow: 1
-				flexBasis: 0
-				minWidth: 0
-				overflow: 'hidden'
-				textOverflow: 'ellipsis'
-				width: '100%'
-
-			else throw new Error _ERR + "invalid mixin '#{m}'"
-		
-
-
-	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, ta, z,
-	wh, ov, tov, f, mix, mt, mb, ml, mr, pt, pb, pl, pr, br, xg}
+	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, ta, z, wh, ov, tov, f,
+	br, mt, mb, ml, mr, pt, pb, pl, pr}
 
 
 
