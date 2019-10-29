@@ -40,14 +40,26 @@ shortstyle = (styleMaps = {}, unit) ->
 		for s in ss
 			if s == '' || s == 'false' || s == 'true' || s == 'undefined' || s == 'null' then continue
 
-			if allStyleMaps[s[0] + s[1] + s[2] + s[3]] then k = s[0] + s[1] + s[2] + s[3]
-			else if allStyleMaps[s[0] + s[1] + s[2]] then k = s[0] + s[1] + s[2]
-			else if allStyleMaps[s[0] + s[1]] then k = s[0] + s[1]
-			else if allStyleMaps[s[0]] then k = s[0]
-			else if allStyleMaps[s] then k = s
-			else
+			for i in [s.length...0]
+				si = s.substr 0, i
+				if allStyleMaps[si]
+					k = si
+					break
+
+			if !si
 				console.warn "invalid shortstyle: #{s}"
 				return {}
+
+
+			# Did quick perf test and didn't find any obvious difference
+			# if allStyleMaps[s[0] + s[1] + s[2] + s[3]] then k = s[0] + s[1] + s[2] + s[3]
+			# else if allStyleMaps[s[0] + s[1] + s[2]] then k = s[0] + s[1] + s[2]
+			# else if allStyleMaps[s[0] + s[1]] then k = s[0] + s[1]
+			# else if allStyleMaps[s[0]] then k = s[0]
+			# else if allStyleMaps[s] then k = s
+			# else
+			# 	console.warn "invalid shortstyle: #{s}"
+			# 	return {}
 
 			v = s.substr k.length
 

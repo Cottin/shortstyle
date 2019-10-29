@@ -108,26 +108,27 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		else if wrap == '_' then # noop
 		else throw new Error _ERR + "fourth char in x: '#{v}' is invalid, see docs"
 
-		grow = v[4]
-		if !grow then return ret
-		if grow == '_' then # noop
-		else if isNaN parseInt grow
-			throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
-		else ret.flexGrow = parseInt grow
+		# grow = v[4]
+		# if !grow then return ret
+		# if grow == '_' then # noop
+		# else if isNaN parseInt grow
+		# 	throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
+		# else ret.flexGrow = parseInt grow
 
-		shrink = v[5]
-		if !shrink then return ret
-		if shrink == '_' then # noop
-		else if isNaN parseInt shrink
-			throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
-		else ret.flexShrink = parseInt shrink
+		# shrink = v[5]
+		# if !shrink then return ret
+		# if shrink == '_' then # noop
+		# else if isNaN parseInt shrink
+		# 	throw new Error _ERR + "fifth char in x: '#{v}' is invalid, see docs"
+		# else ret.flexShrink = parseInt shrink
 
-		if v[6] then throw new Error _ERR + "x only supports 6 chars '#{v}', see docs"
+		if v[4] then throw new Error _ERR + "x only supports 6 chars '#{v}', see docs"
 
 		return ret
 
 	xg = (x) -> {flexGrow: parseInt x}
 	xs = (x) -> {flexShrink: parseInt x}
+	xb = (x) -> {flexBasis: parseInt x}
 
 	# text-align
 	ta = (x) ->
@@ -137,6 +138,12 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'r' then textAlign: 'right'
 			else throw new Error _ERR + "ta (text-align) expects c, l or r,
 			given: #{x}"
+
+	ttra = (x) ->
+		switch x
+			when 'u' then textTransform: 'uppercase'
+			when 'l' then textTransform: 'lowercase'
+			when 'c' then textTransform: 'capitalize'
 
 	# z-index
 	z = (x) -> {zIndex: x}
@@ -230,8 +237,8 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 		return ret
 
-	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, ta, z, wh, ov, tov, f,
-	br, mt, mb, ml, mr, pt, pb, pl, pr}
+	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra}
 
 
 
