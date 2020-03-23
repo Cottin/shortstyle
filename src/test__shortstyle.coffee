@@ -1,6 +1,10 @@
+{__, empty, last, match, max, min, props, type} = R = require 'ramda' #auto_require: ramda
+{fo} = RE = require 'ramda-extras' #auto_require: ramda-extras
+[ːlast] = ['last'] #auto_sugar
+qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
+qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
+_ = (...xs) -> xs
 assert = require 'assert'
-{__, empty, last, min, props, type} = require 'ramda' #auto_require: ramda
-{} = require 'ramda-extras' #auto_require: ramda-extras
 {deepEq, fdeepEq} = require 'testhelp' #auto_require: testhelp
 
 shortstyle = require './shortstyle'
@@ -131,11 +135,25 @@ describe 'shortstyle', ->
 				borderRadius: 9
 
 
-	describe 'selectors', ->
+	describe 'selectors & media queries', ->
 
-		it ':f', -> deepEq {':first-child': {marginRight: '10vh'}}, short('mr10vh:f')
-		it ':nl', -> deepEq {':not(:last-child)': {marginRight: '10vh'}}, short('mr10vh:nl')
+		# it ':f', -> deepEq {':first-child': {marginRight: '10vh'}}, short('mr10vh:f')
+		# it ':nl', -> deepEq {':not(ːlast-child)': {marginRight: '10vh'}}, short('mr10vh:nl')
 
+		it '>(f())', ->
+			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] hofo(pl1 pb2) >200[mb1] fo(pb3 pt2)')
+			expected = {
+				'@media (max-width: 100px)': {
+					[':not(:'+'last-child)']: { paddingTop: '5vh', marginRight: '10vh' },
+					marginLeft: '1px'
+				},
+				'@media (min-width: 200px)': { marginBottom: '1px' },
+				':hover': { paddingLeft: '1px', paddingBottom: '2px' },
+				':focus': { paddingLeft: '1px', paddingBottom: '3px', paddingTop: '2px'},
+				marginLeft: '2px'
+			}
+
+			deepEq expected, res
 
 	describe.skip 'prio', ->
 		it 'actual stype props should override', ->

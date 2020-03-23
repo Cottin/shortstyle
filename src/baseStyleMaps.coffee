@@ -1,4 +1,4 @@
-{__, empty, join, map, match, replace, reverse, split, test, type} = require 'ramda' #auto_require: ramda
+{__, empty, join, map, match, none, replace, reverse, split, test, type} = require 'ramda' #auto_require: ramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -126,9 +126,25 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 		return ret
 
+	usel = (x) ->
+		switch x
+			when 'n' then userSelect: 'none'
+			else throw new Error _ERR + "usel (user-select) got invalid type: #{x}"
+
+	dis = (x) ->
+		switch x
+			when 'i' then display: 'inline'
+			when 'if' then display: 'inline-flex'
+			else throw new Error _ERR + "dis (display) got invalid type: #{x}"
+
+	vis = (x) ->
+		switch x
+			when 'h' then visibility: 'hidden'
+			else throw new Error _ERR + "vis (visibility) got invalid type: #{x}"
+
 	xg = (x) -> {flexGrow: parseInt x}
 	xs = (x) -> {flexShrink: parseInt x}
-	xb = (x) -> {flexBasis: parseInt x}
+	xb = (x) -> {flexBasis: parseInt(x)*180+'rem'}
 
 	# text-align
 	ta = (x) ->
@@ -138,6 +154,11 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'r' then textAlign: 'right'
 			else throw new Error _ERR + "ta (text-align) expects c, l or r,
 			given: #{x}"
+
+	td = (x) ->
+		switch x
+			when 'u' then textDecoration: 'underline'
+			else throw new Error _ERR + "td (text-decoration) got invalid value #{x}"
 
 	ttra = (x) ->
 		switch x
@@ -238,7 +259,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra}
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel}
 
 
 

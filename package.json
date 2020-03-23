@@ -1,13 +1,14 @@
 {
   "name": "shortstyle",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "description": "Concise way of writing styles as properties",
-  "main": "lib/shortstyle.js",
+  "main": "shortstyle.js",
   "scripts": {
     "test": "mocha 'src/**/test*.coffee' --watch --compilers coffee:coffeescript/register --transpile --slow 1",
-    "clean": "rimraf lib",
-    "build": "coffee -o lib/ -c src/",
-    "dist": "npm run clean && npm run build"
+    "clean": "rimraf *.js",
+    "build": "coffee -o ./ -c src/",
+    "dist": "npm run clean && npm run build",
+    "pub": "npm run dist && npm publish && npm run clean"
   },
   "repository": {
     "type": "git",
