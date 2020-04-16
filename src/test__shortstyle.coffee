@@ -1,5 +1,5 @@
 {__, empty, last, match, max, min, props, type} = R = require 'ramda' #auto_require: ramda
-{fo} = RE = require 'ramda-extras' #auto_require: ramda-extras
+{} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [ːlast] = ['last'] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
 qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
@@ -141,15 +141,16 @@ describe 'shortstyle', ->
 		# it ':nl', -> deepEq {':not(ːlast-child)': {marginRight: '10vh'}}, short('mr10vh:nl')
 
 		it '>(f())', ->
-			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] hofo(pl1 pb2) >200[mb1] fo(pb3 pt2)')
+			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] >200[mb1 hofo(pb3 pt2)]')
 			expected = {
 				'@media (max-width: 100px)': {
 					[':not(:'+'last-child)']: { paddingTop: '5vh', marginRight: '10vh' },
 					marginLeft: '1px'
 				},
-				'@media (min-width: 200px)': { marginBottom: '1px' },
-				':hover': { paddingLeft: '1px', paddingBottom: '2px' },
-				':focus': { paddingLeft: '1px', paddingBottom: '3px', paddingTop: '2px'},
+				'@media (min-width: 200px)':
+					marginBottom: '1px',
+					'@media (hover: hover)': { ':hover': {paddingBottom: '3px', paddingTop: '2px'}}
+					':focus': {paddingBottom: '3px', paddingTop: '2px'}
 				marginLeft: '2px'
 			}
 

@@ -1,4 +1,4 @@
-{__, empty, join, map, match, none, replace, reverse, split, test, type} = require 'ramda' #auto_require: ramda
+{__, empty, join, map, match, none, replace, reverse, split, tap, test, type} = require 'ramda' #auto_require: ramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -57,6 +57,8 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	# border-radius
 	br = _oneTwoFour 'borderRadius'
 	br.refine = (x) -> replace /_/g, ' ', unit(x)
+
+	lh = (x) -> {lineHeight: unit(x)}
 
 	###### NON-UNIT BASED
 
@@ -128,7 +130,9 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 
 	usel = (x) ->
 		switch x
-			when 'n' then userSelect: 'none'
+			when 'n'
+				userSelect: 'none'
+				'-webkit-tap-highlight-color': 'none'
 			else throw new Error _ERR + "usel (user-select) got invalid type: #{x}"
 
 	dis = (x) ->
@@ -259,7 +263,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel}
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh}
 
 
 

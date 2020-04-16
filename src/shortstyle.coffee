@@ -1,4 +1,4 @@
-{curry, fromPairs, identity, isNil, last, map, match, max, merge, min, nth, replace, split, test, toPairs, trim, type} = R = require 'ramda' #auto_require: ramda
+{curry, fromPairs, head, identity, isNil, keys, last, map, match, max, merge, min, nth, replace, split, test, toPairs, trim, type} = R = require 'ramda' #auto_require: ramda
 {$} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
@@ -14,12 +14,13 @@ _selectors =
 	l: ':last-child' 
 	e: ':nth-child(even)'
 	o: ':nth-child(odd)'
-	ho: ':hover'
+	# https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
+	ho: {'@media (hover: hover)': ':hover'}
 	fo: ':focus'
 	'2l': ':nth-last-child(2)'
 
 baseSelectors = $ _selectors, toPairs, map(([k, v]) -> ['n'+k, ":not(#{v})"]), fromPairs, merge _selectors
-baseSelectors.hofo = [':hover', ':focus']
+baseSelectors.hofo = [{'@media (hover: hover)': ':hover'}, ':focus']
 
 # R.match(/(\w)(\d)/g, 'a1 b2 c3') returns ["a1", "b2", "c3"]
 # matchG(/(\w)(\d)/g, 'a1 b2 c3') returns [["a1", "a", "1"], ["b2", "b", "2"], ["c3", "c", "3"]]
@@ -44,24 +45,6 @@ matchG = curry (re, str) ->
 
 	return res
 
-setOrAppend = (s, sbase) -> if !sbase then s else sbase + ' ' + s
-
-# eg. 'f(m1) p2' => {'': 'p2', f: 'm1'}
-extractSelectors = curry (allSelectors, str) ->
-	REsels = /(\w+)\((.*?)\)\s?/g
-	ms = matchG REsels, str
-	sels = {}
-	for m in ms
-		[___, sel, body] = m
-		selector = allSelectors[sel]
-		if !selector then console.warn "invalid selector: #{sel}"
-		else if type(selector) == 'Array'
-			for k in selector then sels[k] = setOrAppend body, sels[k]
-		else sels[selector] = setOrAppend body, sels[selector]
-
-	sels[''] = $ str, replace(REsels, ''), trim
-	return sels
-
 # eg. '<100[m1] p2' => {'': 'p2', '@media (max-width: 100px)': 'm1'}
 extractMediaQueries = (str) ->
 	REmedia	= /([<>])(\d+)\[(.*?)\]\s?/g
@@ -74,31 +57,6 @@ extractMediaQueries = (str) ->
 	media[''] = $ str, replace(REmedia, ''), trim
 	return media
 
-# eg. 'm1 p2' => {margin: 1, padding: 2}
-extractStyles = curry (allStyleMaps, unit, str) ->
-	ss = split ' ', str
-
-	style = {}
-	for s in ss
-		if s == '' || s == 'false' || s == 'true' || s == 'undefined' || s == 'null' then continue
-
-		for i in [s.length...0]
-			si = s.substr 0, i
-			if allStyleMaps[si]
-				k = si
-				break
-
-		if !k
-			console.warn "invalid shortstyle: #{s}"
-			return {}
-
-		v = s.substr k.length
-
-		val = $ v, allStyleMaps[k].refine || identity, tryParseNum
-		Object.assign style, allStyleMaps[k](val)
-
-	return style
-
 # Recursively flattens values for the empty key ''
 # eg. {a: {'': {a1: 'x'}, a2: 'y'}, '': {b1: 'z'}}
 # returns {a: {a1: 'x', a2: 'y}, b1: 'z'}
@@ -110,6 +68,71 @@ untangle = (o) ->
 		else res[k] = untangle(v)
 	return res
 
+# Unpure helper that sets or merges value x onto o[k]
+setOrAppend = (k, x, o) ->
+	if !o[k] then o[k] = x
+	else
+		if type(x) == 'String' then o[k] += ' ' + x
+		else if type(x) == 'Object' then o[k] = merge o[k], x
+
+addSelectors = (allSelectors, o) ->
+	REsels = /(\w+)\((.*?)\)\s?/g
+	res = {}
+	for k, v of o
+		if type(v) != 'String' then throw new Error 'NYI' # could easily support more nesting of @medias though
+		ms = matchG REsels, v
+		res[k] = {'': $ v, replace(REsels, ''), trim}
+		for m in ms
+			[___, sel, body] = m
+			selector = allSelectors[sel]
+			if !selector then console.warn "invalid selector: #{sel}"
+			else if type(selector) == 'Array'
+				for x in selector
+					if type(x) == 'String' then setOrAppend x, body, res[k]
+					else if type(x) == 'Object'
+						media = $ x, keys, head
+						setOrAppend media, {"#{x[media]}": body}, res[k]
+					else throw new Error 'NYI'
+			else if type(selector) == 'Object'
+				media = $ selector, keys, head
+				setOrAppend media, {"#{selector[media]}": body}, res[k]
+			else if type(selector) == 'String'
+				setOrAppend selector, body, res[k]
+			else throw new Error "NYI selector type #{type(selector)}"
+
+	return res
+
+addStyle = (allStyleMaps, o) ->
+	res = {}
+	for key, v of o
+		switch type v
+			when 'Object' then res[key] = addStyle allStyleMaps, v
+			when 'String'
+				ss = split ' ', v
+				style = {}
+				for s in ss
+					if s == '' || s == 'false' || s == 'true' || s == 'undefined' || s == 'null' then continue
+
+					for i in [s.length...0]
+						si = s.substr 0, i
+						if allStyleMaps[si]
+							k = si
+							break
+
+					if !k
+						console.warn "invalid shortstyle: #{s}"
+						res[key] = {}
+						continue
+
+					v = s.substr k.length # eg. top5 -> 5
+
+					val = $ v, allStyleMaps[k].refine || identity, tryParseNum
+					Object.assign style, allStyleMaps[k](val)
+				res[key] = style
+			else throw new Error "NYI"
+	return res
+
+
 # Takes styleMaps and unit function and returns parse and createElementHelper
 shortstyle = (styleMaps = {}, unit, selectors = {}) ->
 	baseStyleMaps = getBaseStyleMaps unit
@@ -120,19 +143,19 @@ shortstyle = (styleMaps = {}, unit, selectors = {}) ->
 	return (str) ->
 		if isNil str then return {}
 		if memo[str] then return memo[str]
-		
+
 		# 'm2 <200[m1 f(p2)]'
-		styleMQ = extractMediaQueries str
+		style1 = extractMediaQueries str
 		# {'': 'm2', '@media (min-width: 200px)': 'm1 f(p2)'}
-		styleMQS = map extractSelectors(allSelectors), styleMQ
+		style2 = addSelectors allSelectors, style1
 		# {'': {'': 'm2'}, '@media (min-width: 200px)': {'': 'm1', ':first-child': 'p2'}}
-		styleMQSS = map map(extractStyles(allStyleMaps, unit)), styleMQS
+		style3 = addStyle allStyleMaps, style2
 		# {'': {'': {margin: 2}}, '@media (min-width: 200px)': {'': {margin: 1}, ':first-child': {padding: 2}}}
-		style = untangle styleMQSS
+		style4 = untangle style3
 		# {margin: 2, '@media (min-width: 200px)': {margin: 1, ':first-child': {padding: 2}}}
 
-		memo[str] = style
-		return style
+		memo[str] = style4
+		return style4
 
 
 module.exports = shortstyle
