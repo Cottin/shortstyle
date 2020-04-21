@@ -1,4 +1,4 @@
-{__, empty, join, map, match, none, replace, reverse, split, tap, test, type} = require 'ramda' #auto_require: ramda
+{__, all, empty, join, map, match, none, replace, reverse, split, tap, test, type} = require 'ramda' #auto_require: ramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -139,6 +139,8 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		switch x
 			when 'i' then display: 'inline'
 			when 'if' then display: 'inline-flex'
+			when 'b' then display: 'block'
+			when 'f' then display: 'flex'
 			else throw new Error _ERR + "dis (display) got invalid type: #{x}"
 
 	vis = (x) ->
@@ -181,6 +183,28 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'i' then whiteSpace: 'initial'
 			else throw new Error _ERR + "whs (white-space) expects n, p or i,
 			given: #{x}"
+
+	# word-wrap
+	ww = (x) ->
+		switch x
+			when 'b'
+				# https://stackoverflow.com/a/33214667/416797
+				'overflow-wrap': 'break-word';
+				'word-wrap': 'break-word';
+
+				'-ms-word-break': 'break-all';
+				# This is the dangerous one in WebKit, as it breaks things wherever
+				'word-break': 'break-all';
+				# Instead use this non-standard one:
+				'word-break': 'break-word';
+
+				# Adds a hyphen where the word breaks, if supported (No Blink)
+				'-ms-hyphens': 'auto';
+				'-moz-hyphens': 'auto';
+				'-webkit-hyphens': 'auto';
+				'hyphens': 'auto';
+			else throw new Error _ERR + "ww (word-wrap) expects b, given: #{x}"
+
 
 	# overflow
 	ov = (x) ->
@@ -263,7 +287,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh}
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww}
 
 
 

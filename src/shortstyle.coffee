@@ -15,6 +15,7 @@ _selectors =
 	e: ':nth-child(even)'
 	o: ':nth-child(odd)'
 	# https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
+	# https://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
 	ho: {'@media (hover: hover)': ':hover'}
 	fo: ':focus'
 	'2l': ':nth-last-child(2)'
