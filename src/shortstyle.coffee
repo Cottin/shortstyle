@@ -19,6 +19,9 @@ _selectors =
 	ho: {'@media (hover: hover)': ':hover'}
 	fo: ':focus'
 	'2l': ':nth-last-child(2)'
+	fin: {'@media (pointer: fine)': ''}
+	coa: {'@media (pointer: coarse)': ''}
+	ac: ':active'
 
 baseSelectors = $ _selectors, toPairs, map(([k, v]) -> ['n'+k, ":not(#{v})"]), fromPairs, merge _selectors
 baseSelectors.hofo = [{'@media (hover: hover)': ':hover'}, ':focus']

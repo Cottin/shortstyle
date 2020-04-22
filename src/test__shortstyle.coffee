@@ -141,7 +141,7 @@ describe 'shortstyle', ->
 		# it ':nl', -> deepEq {':not(ːlast-child)': {marginRight: '10vh'}}, short('mr10vh:nl')
 
 		it '>(f())', ->
-			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] >200[mb1 hofo(pb3 pt2)]')
+			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] >200[mb1 hofo(pb3 pt2)] coa(pb10)')
 			expected = {
 				'@media (max-width: 100px)': {
 					[':not(:'+'last-child)']: { paddingTop: '5vh', marginRight: '10vh' },
@@ -151,6 +151,8 @@ describe 'shortstyle', ->
 					marginBottom: '1px',
 					'@media (hover: hover)': { ':hover': {paddingBottom: '3px', paddingTop: '2px'}}
 					':focus': {paddingBottom: '3px', paddingTop: '2px'}
+				'@media (pointer: coarse)':
+					paddingBottom: '10px'
 				marginLeft: '2px'
 			}
 
