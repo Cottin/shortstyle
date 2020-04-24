@@ -181,7 +181,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'n' then whiteSpace: 'nowrap'
 			when 'p' then whiteSpace: 'pre'
 			when 'i' then whiteSpace: 'initial'
-			else throw new Error _ERR + "whs (white-space) expects n, p or i,
+			else throw new Error _ERR + "wh (white-space) expects n, p or i,
 			given: #{x}"
 
 	# word-wrap
