@@ -1,7 +1,9 @@
-{__, all, empty, join, map, match, none, replace, reverse, split, tap, test, type} = require 'ramda' #auto_require: ramda
+__ = require('ramda/es/__').default; all = require('ramda/es/all').default; empty = require('ramda/es/empty').default; join = require('ramda/es/join').default; map = require('ramda/es/map').default; match = require('ramda/es/match').default; none = require('ramda/es/none').default; replace = require('ramda/es/replace').default; reverse = require('ramda/es/reverse').default; split = require('ramda/es/split').default; tap = require('ramda/es/tap').default; test = require('ramda/es/test').default; type = require('ramda/es/type').default; #auto_require: srcramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
+
+colorsStatic = require './colors'
 
 ###### Probably no need to override:
 
@@ -11,7 +13,7 @@ defaultUnit = (x) ->
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-getBaseStyleMaps = (unit = defaultUnit) ->
+getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	###### UNIT BASED
 
 	# height
@@ -69,6 +71,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'f' then {position: 'fixed'}
 			when 'r' then {position: 'relative'}
 			when 's' then {position: 'static'}
+			when 'y' then {position: 'sticky'}
 			else throw new Error _ERR + "pos doesn't support #{x}"
 
 	# flex-box
@@ -164,6 +167,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 	td = (x) ->
 		switch x
 			when 'u' then textDecoration: 'underline'
+			when 'n' then textDecoration: 'none'
 			else throw new Error _ERR + "td (text-decoration) got invalid value #{x}"
 
 	ttra = (x) ->
@@ -171,6 +175,24 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 			when 'u' then textTransform: 'uppercase'
 			when 'l' then textTransform: 'lowercase'
 			when 'c' then textTransform: 'capitalize'
+
+	bord = (x) -> border '', x
+	borb = (x) -> border '-bottom', x
+	bort = (x) -> border '-top', x
+	borl = (x) -> border '-left', x
+	borr = (x) -> border '-right', x
+
+	border = (side, x) ->
+		if x == 0 then return "border#{side}": 'none'
+
+		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d))?$")
+		if ! test RE, x then return warn "Invalid string given for border: #{x}"
+		[___, clr, ____, size] = match RE, x
+
+		return "border#{side}": "#{unit(size || 1)} solid #{colors(clr)}"
+
+	ls = (x) -> letterSpacing: unit x
+
 
 	# z-index
 	z = (x) -> {zIndex: x}
@@ -287,7 +309,7 @@ getBaseStyleMaps = (unit = defaultUnit) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww}
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls}
 
 
 

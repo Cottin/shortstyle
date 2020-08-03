@@ -1,11 +1,14 @@
-{curry, fromPairs, head, identity, isNil, keys, last, map, match, max, merge, min, nth, replace, split, test, toPairs, trim, type} = R = require 'ramda' #auto_require: ramda
-{$} = RE = require 'ramda-extras' #auto_require: ramda-extras
+curry = require('ramda/es/curry').default; fromPairs = require('ramda/es/fromPairs').default; head = require('ramda/es/head').default; identity = require('ramda/es/identity').default; isNil = require('ramda/es/isNil').default; keys = require('ramda/es/keys').default; last = require('ramda/es/last').default; map = require('ramda/es/map').default; match = require('ramda/es/match').default; max = require('ramda/es/max').default; merge = require('ramda/es/merge').default; min = require('ramda/es/min').default; nth = require('ramda/es/nth').default; replace = require('ramda/es/replace').default; split = require('ramda/es/split').default; test = require('ramda/es/test').default; toPairs = require('ramda/es/toPairs').default; trim = require('ramda/es/trim').default; type = require('ramda/es/type').default; #auto_require: srcramda
+
+{$} = require 'ramda-extras' #auto_require: ramda-extras
+# $ = (data, functions...) -> pipe(functions...)(data)
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
 qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
 _ = (...xs) -> xs
 
 getBaseStyleMaps = require './baseStyleMaps'
+colors = require './colors'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
@@ -138,8 +141,8 @@ addStyle = (allStyleMaps, o) ->
 
 
 # Takes styleMaps and unit function and returns parse and createElementHelper
-shortstyle = (styleMaps = {}, unit, selectors = {}) ->
-	baseStyleMaps = getBaseStyleMaps unit
+shortstyle = (styleMaps = {}, unit, colors, selectors = {}) ->
+	baseStyleMaps = getBaseStyleMaps unit, colors
 	allStyleMaps = merge baseStyleMaps, styleMaps
 	allSelectors = merge baseSelectors, selectors
 	memo = {}
@@ -161,6 +164,7 @@ shortstyle = (styleMaps = {}, unit, selectors = {}) ->
 		memo[str] = style4
 		return style4
 
+shortstyle.colors = colors
 
 module.exports = shortstyle
 
