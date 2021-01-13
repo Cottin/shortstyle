@@ -1,8 +1,8 @@
-join = require('ramda/es/join').default; match = require('ramda/es/match').default; sum = require('ramda/es/sum').default; test = require('ramda/es/test').default; #auto_require: srcramda
+join = require('ramda/src/join'); match = require('ramda/src/match'); sum = require('ramda/src/sum'); test = require('ramda/src/test'); #auto_require: srcramda
 {mapO, $} = require 'ramda-extras' #auto_require: ramda-extras
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
+qqq = (...args) -> console.log ...args
 _ = (...xs) -> xs
 
 _warn = (msg, ret) ->

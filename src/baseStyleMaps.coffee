@@ -1,4 +1,4 @@
-__ = require('ramda/es/__').default; all = require('ramda/es/all').default; empty = require('ramda/es/empty').default; join = require('ramda/es/join').default; map = require('ramda/es/map').default; match = require('ramda/es/match').default; none = require('ramda/es/none').default; replace = require('ramda/es/replace').default; reverse = require('ramda/es/reverse').default; split = require('ramda/es/split').default; tap = require('ramda/es/tap').default; test = require('ramda/es/test').default; type = require('ramda/es/type').default; #auto_require: srcramda
+__ = require('ramda/src/__'); all = require('ramda/src/all'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 
 _ERR = 'Shortstyle: '
@@ -63,6 +63,9 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	lh = (x) -> {lineHeight: unit(x)}
 
 	###### NON-UNIT BASED
+	bg = (x) ->
+		if x == 0 then backgroundColor: 'transparent'
+		else backgroundColor: colors x
 
 	# position
 	pos = (x) ->
@@ -144,6 +147,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'if' then display: 'inline-flex'
 			when 'b' then display: 'block'
 			when 'f' then display: 'flex'
+			when 'n' then display: 'none'
 			else throw new Error _ERR + "dis (display) got invalid type: #{x}"
 
 	vis = (x) ->
@@ -248,6 +252,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			else throw new Error _ERR + "tov (text-overflow) expects e, c, or i,
 			given: #{x}"
 
+	op = (x) -> {opacity: x}
+
 
 	##############################################################################
 	##### Functions below this line are things you'd want to override in your app:
@@ -308,7 +314,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 		return ret
 
-	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f,
+	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls}
 
 

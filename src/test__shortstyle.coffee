@@ -2,7 +2,7 @@
 {} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [ːlast] = ['last'] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
+qqq = (...args) -> console.log ...args
 _ = (...xs) -> xs
 assert = require 'assert'
 {deepEq, fdeepEq} = require 'testhelp' #auto_require: testhelp

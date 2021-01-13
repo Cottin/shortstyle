@@ -1,10 +1,10 @@
-curry = require('ramda/es/curry').default; fromPairs = require('ramda/es/fromPairs').default; head = require('ramda/es/head').default; identity = require('ramda/es/identity').default; isNil = require('ramda/es/isNil').default; keys = require('ramda/es/keys').default; last = require('ramda/es/last').default; map = require('ramda/es/map').default; match = require('ramda/es/match').default; max = require('ramda/es/max').default; merge = require('ramda/es/merge').default; min = require('ramda/es/min').default; nth = require('ramda/es/nth').default; replace = require('ramda/es/replace').default; split = require('ramda/es/split').default; test = require('ramda/es/test').default; toPairs = require('ramda/es/toPairs').default; trim = require('ramda/es/trim').default; type = require('ramda/es/type').default; #auto_require: srcramda
+curry = require('ramda/src/curry'); fromPairs = require('ramda/src/fromPairs'); head = require('ramda/src/head'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); keys = require('ramda/src/keys'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); toPairs = require('ramda/src/toPairs'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
 
 {$} = require 'ramda-extras' #auto_require: ramda-extras
 # $ = (data, functions...) -> pipe(functions...)(data)
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (f) -> console.log match(/return (.*);/, f.toString())[1], JSON.stringify(f(), null, 2)
+qqq = (...args) -> console.log ...args
 _ = (...xs) -> xs
 
 getBaseStyleMaps = require './baseStyleMaps'
