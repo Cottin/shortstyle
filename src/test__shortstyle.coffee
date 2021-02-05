@@ -1,4 +1,4 @@
-{__, empty, last, match, max, min, props, type} = R = require 'ramda' #auto_require: ramda
+{__, empty, last, match, max, min, props, test, type} = R = require 'ramda' #auto_require: ramda
 {} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [ːlast] = ['last'] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
@@ -20,11 +20,9 @@ styleMaps =
 		boxShadow: '1 1px 3px 0 rgba(0,0,0,0.37)'
 		borderRadius: 29
 
-short = shortstyle styleMaps
-short2 = shortstyle {}, (x) ->
-	if type(x) == 'Number' then x + 'rem'
-	else x
 
+short = shortstyle {styleMaps, unit: (x) -> if type(x) == 'Number' then x + 'px' else x}
+short2 = shortstyle {styleMaps: {}}
 
 describe 'shortstyle', ->
 
@@ -36,9 +34,9 @@ describe 'shortstyle', ->
 		it 'simple case', -> deepEq ['tac', {}], short({s_: 'tac'})
 
 	describe 'h = height', ->
-		it 'default unit', -> deepEq {height: '87px'}, short('h87')
 		it 'string', -> deepEq {height: '87%'}, short('h87%')
-		it 'custom unit', -> deepEq {height: '87rem'}, short2('h87')
+		it 'custom unit', -> deepEq {height: '87px'}, short('h87')
+		it 'default unit', -> deepEq {height: '8.7rem'}, short2('h87')
 
 	describe 'w = width', ->
 		it 'default unit', -> deepEq {width: '87px'}, short('w87')
@@ -49,14 +47,14 @@ describe 'shortstyle', ->
 		it '3', -> deepEq {width: '87px'}, short('mr20:nl')
 
 	describe 'm = margin', ->
-		it 'default unit', -> deepEq {margin: '10px'}, short('m10')
+		it 'custom unit', -> deepEq {margin: '10px'}, short('m10')
 		it 'string', -> deepEq {margin: '10vh'}, short('m10vh')
-		it 'custom unit', -> deepEq {margin: '10rem'}, short2('m10')
+		it 'default unit', -> deepEq {margin: '1rem'}, short2('m10')
 
 		it 'four', ->
 			deepEq {margin: '0px 10px 2px 3px'}, short('m0_10_2_3')
 			deepEq {margin: '1px 10vh 2vw 3%'}, short('m1_10vh_2vw_3%')
-			deepEq {margin: '1rem 10vh 2vw 3%'}, short2('m1_10vh_2vw_3%')
+			deepEq {margin: '0.1rem 10vh 2vw 3%'}, short2('m1_10vh_2vw_3%')
 
 		it 'two', -> deepEq {margin: '1px 10vh'}, short('m1_10vh')
 
@@ -93,9 +91,17 @@ describe 'shortstyle', ->
 	describe 'xg = flexgrow', ->
 		it 'simple', -> deepEq {flexGrow: 2}, short('xg2')
 
-	# describe 'bg = background', ->
-	# 	it 'simple cases', ->
+	describe 'transform', ->
+		it 'rot', -> deepEq {transform: 'rotate(-3deg)'}, short('rot-3')
+		it 'rot + scale', -> deepEq {transform: 'rotate(-4deg) scale(1.05)'}, short('rot-3 scale1.05 rot-4')
+
+	# describe 'bg = backgroundColor', ->
+	# 	it '1', ->
 	# 		deepEq {backgroundColor: 'blue'}, short('bga1')
+
+	describe 'baurl = background-image: url(...)', ->
+		it '1', ->
+			deepEq {backgroundImage: 'url(/img/test.jpg)'}, short('baurl/img/test.jpg')
 
 	describe 'f = font', ->
 		it 'simple cases', ->
@@ -126,6 +132,10 @@ describe 'shortstyle', ->
 				fdeepEq short('f_4__2'),
 				fontWeight: 200
 				fontSize: '12px'
+
+	describe 'sh = box-shadow', ->
+		it '1', ->
+			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1)'}, short('sh1_2_3_4_bk-1'),
 
 	describe 'mix', ->
 		it 'order matters', ->

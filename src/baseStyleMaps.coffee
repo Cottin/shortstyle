@@ -1,5 +1,8 @@
-__ = require('ramda/src/__'); all = require('ramda/src/all'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
+__ = require('ramda/src/__'); all = require('ramda/src/all'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
+qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
+qqq = (...args) -> console.log ...args
+_ = (...xs) -> xs
 
 _ERR = 'Shortstyle: '
 
@@ -67,6 +70,21 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		if x == 0 then backgroundColor: 'transparent'
 		else backgroundColor: colors x
 
+	baurl = (url) -> backgroundImage: "url(#{url})"
+
+	basi = (x) ->
+		switch x
+			when 'n' then {backgroundSize: 'contain'}
+			when 'v' then {backgroundSize: 'cover'}
+			else throw new Error _ERR + "basi got invalid value: #{x}"
+
+	bare = (x) ->
+		switch x
+			when 'n' then {backgroundRepeat: 'no-repeat'}
+			when 'x' then {backgroundRepeat: 'repeat-x'}
+			when 'y' then {backgroundRepeat: 'repeat-y'}
+			else throw new Error _ERR + "bare got invalid value: #{x}"
+
 	# position
 	pos = (x) ->
 		switch x
@@ -87,6 +105,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		di = v[0]
 		if di == 'r' then ret.flexDirection = 'row'
 		else if di == 'c' then ret.flexDirection = 'column'
+		else if di == 't' then ret.flexDirection = 'row-reverse'
+		else if di == 'v' then ret.flexDirection = 'column-reverse'
 		else throw new Error _ERR + "first char in x: '#{v}' is invalid, see docs"
 
 		jc = v[1]
@@ -134,6 +154,26 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 		return ret
 
+	# justify-self
+	jus = (x) ->
+		switch x
+			when 'b' then justifySelf: 'baseline'
+			when 'c' then justifySelf: 'center'
+			when 's' then justifySelf: 'flex-start'
+			when 'e' then justifySelf: 'flex-end'
+			when 't' then justifySelf: 'strech'
+			else throw new Error _ERR + "js (justify-self) received invalid value: #{x}"
+
+	# align-self
+	als = (x) ->
+		switch x
+			when 'b' then alignSelf: 'baseline'
+			when 'c' then alignSelf: 'center'
+			when 's' then alignSelf: 'flex-start'
+			when 'e' then alignSelf: 'flex-end'
+			when 't' then alignSelf: 'strech'
+			else throw new Error _ERR + "js (align-self) received invalid value: #{x}"
+
 	usel = (x) ->
 		switch x
 			when 'n'
@@ -180,6 +220,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'l' then textTransform: 'lowercase'
 			when 'c' then textTransform: 'capitalize'
 
+	# ex. bordwh or bordwh_1
 	bord = (x) -> border '', x
 	borb = (x) -> border '-bottom', x
 	bort = (x) -> border '-top', x
@@ -190,7 +231,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		if x == 0 then return "border#{side}": 'none'
 
 		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d))?$")
-		if ! test RE, x then return warn "Invalid string given for border: #{x}"
+		if ! test RE, x then throw new Error _ERR + "Invalid string given for border: #{x}"
 		[___, clr, ____, size] = match RE, x
 
 		return "border#{side}": "#{unit(size || 1)} solid #{colors(clr)}"
@@ -254,6 +295,32 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	op = (x) -> {opacity: x}
 
+	cur = (x) ->
+		switch x
+			when 'p' then cursor: 'pointer'
+			when 'd' then cursor: 'default'
+			else throw new Error _ERR + "invalid cur(sor) '#{x}'"
+
+
+	sh = (v) ->
+		if v == 0 then return boxShadow: 'none'
+		res = match /^(-?\d+)_(-?\d+)_(\d+)_(\d+)_([a-z]{2,3}(-(\d))?)$/, v
+		if !res then return warn "Invalid string given for shadow: #{v}"
+		[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
+
+		boxShadow: "#{x} #{y} #{blur} #{spread} #{colors(res[5])}"
+
+	rot = (deg, style) -> transform deg, 'rotate', "rotate(#{deg}deg)", style
+	scale = (x, style) -> transform x, 'scale', "scale(#{x})", style
+
+	transform = (x, key, full, style) ->
+		if !style.transform then {transform: full}
+		else
+			re = new RegExp("#{key}\\(.*?\\)")
+			if test(re, style.transform) then transform: replace re, full, style.transform
+			else transform: style.transform + " #{full}"
+
+
 
 	##############################################################################
 	##### Functions below this line are things you'd want to override in your app:
@@ -315,7 +382,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls}
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
+	rot, scale, sh, jus, als, baurl, basi, bare}
 
 
 

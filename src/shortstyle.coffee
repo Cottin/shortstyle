@@ -66,7 +66,7 @@ extractMediaQueries = (str) ->
 
 # Recursively flattens values for the empty key ''
 # eg. {a: {'': {a1: 'x'}, a2: 'y'}, '': {b1: 'z'}}
-# returns {a: {a1: 'x', a2: 'y}, b1: 'z'}
+# returns {a: {a1: 'x', a2: 'y'}, b1: 'z'}
 untangle = (o) ->
 	if type(o) != 'Object' then return o
 	res = {}
@@ -134,14 +134,42 @@ addStyle = (allStyleMaps, o) ->
 					v = s.substr k.length # eg. top5 -> 5
 
 					val = $ v, allStyleMaps[k].refine || identity, tryParseNum
-					Object.assign style, allStyleMaps[k](val)
+					Object.assign style, allStyleMaps[k](val, style)
 				res[key] = style
 			else throw new Error "NYI"
 	return res
 
 
+defaultUnit = (x, base = 0) ->
+	if type(x) == 'Number'
+		return (x + base) / 10 + 'rem'
+	else if ! isNaN(x) # we allow numbers as strings to eg. '2' so we can be a bit lazy in parsing
+		x_ = parseFloat(x)
+		return (x_ + base) / 10 + 'rem'
+	else
+		RE = /^(-)?(\d+)\+(\d+)(vh|vw)?$/
+		RE2 = /^(-?\d+)x$/
+		if test RE, x
+			[___, neg, num_, extra, vhvw] = match RE, x
+			num = parseInt(num_) + base
+			return "calc(#{neg && '-1 * ' || ''}(#{num/10}rem + #{extra * 5 / 10}#{vhvw || 'vw'}))"
+		if test RE2, x # På test... känns inte som det är användbart
+			[___, extra] = match RE2, x
+			return parseInt(extra) * 5 / 10 + 'vh'
+		else
+			return x
+
+defaultColors = colors.buildColors
+	wh: [0, 0, 100]
+	bk: [0, 0, 0]
+	gn: [177, 51, 35]
+	ye: [52, 58, 99]
+
+
+
+
 # Takes styleMaps and unit function and returns parse and createElementHelper
-shortstyle = (styleMaps = {}, unit, colors, selectors = {}) ->
+shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, selectors = {}}) ->
 	baseStyleMaps = getBaseStyleMaps unit, colors
 	allStyleMaps = merge baseStyleMaps, styleMaps
 	allSelectors = merge baseSelectors, selectors
@@ -165,6 +193,7 @@ shortstyle = (styleMaps = {}, unit, colors, selectors = {}) ->
 		return style4
 
 shortstyle.colors = colors
+shortstyle.defaultUnit = defaultUnit
 
 module.exports = shortstyle
 
