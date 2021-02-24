@@ -88,6 +88,12 @@ describe 'shortstyle', ->
 		it 'four', ->
 			deepEq {borderRadius: '0px 10px 2px 3px'}, short('br0_10_2_3')
 
+	describe 'bord = border', ->
+		it '1', -> deepEq {border: '0.2rem solid rgba(0, 0, 0, 1)'}, short2('bordbk_2')
+		it '2', -> deepEq {borderBottom: '0.2rem solid rgba(0, 0, 0, 0.5)'}, short2('borbbk-5_2')
+		# it 'four', ->
+		# 	deepEq {borderRadius: '0px 10px 2px 3px'}, short('br0_10_2_3')
+
 	describe 'xg = flexgrow', ->
 		it 'simple', -> deepEq {flexGrow: 2}, short('xg2')
 

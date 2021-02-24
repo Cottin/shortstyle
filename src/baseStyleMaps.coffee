@@ -222,10 +222,10 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	# ex. bordwh or bordwh_1
 	bord = (x) -> border '', x
-	borb = (x) -> border '-bottom', x
-	bort = (x) -> border '-top', x
-	borl = (x) -> border '-left', x
-	borr = (x) -> border '-right', x
+	borb = (x) -> border 'Bottom', x
+	bort = (x) -> border 'Top', x
+	borl = (x) -> border 'Left', x
+	borr = (x) -> border 'Right', x
 
 	border = (side, x) ->
 		if x == 0 then return "border#{side}": 'none'
@@ -320,7 +320,15 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			if test(re, style.transform) then transform: replace re, full, style.transform
 			else transform: style.transform + " #{full}"
 
-
+	# DEV
+	bg1 = -> backgroundColor: '#FDEDED'
+	bg2 = -> backgroundColor: '#EDEFFD'
+	bg3 = -> backgroundColor: '#F7FDED'
+	bg4 = -> backgroundColor: '#EDFDFD'
+	bg5 = -> backgroundColor: '#F9B2B2'
+	bg6 = -> backgroundColor: '#B3BAF9'
+	bg7 = -> backgroundColor: '#E8FFC1'
+	bg8 = -> backgroundColor: '#B9FAFC'
 
 	##############################################################################
 	##### Functions below this line are things you'd want to override in your app:
@@ -383,7 +391,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bare}
+	rot, scale, sh, jus, als, baurl, basi, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8}
 
 
 
