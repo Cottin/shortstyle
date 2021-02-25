@@ -113,6 +113,10 @@ describe 'shortstyle', ->
 		it '1', ->
 			deepEq {backgroundImage: 'url(/img/test.jpg)'}, short('baurl/img/test.jpg')
 
+	describe 'basi = background-size: ', ->
+		it '1', -> deepEq {backgroundSize: 'cover'}, short('basiv')
+		it '2', -> deepEq {backgroundSize: 'auto 50%'}, short('basia_50%')
+
 	describe 'f = font', ->
 		it 'simple cases', ->
 			fdeepEq short('ft4bu2'),

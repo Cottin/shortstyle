@@ -73,10 +73,21 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	baurl = (url) -> backgroundImage: "url(#{url})"
 
 	basi = (x) ->
-		switch x
-			when 'n' then {backgroundSize: 'contain'}
-			when 'v' then {backgroundSize: 'cover'}
-			else throw new Error _ERR + "basi got invalid value: #{x}"
+		fromX = (x) ->
+			switch x
+				when 'n' then 'contain'
+				when 'v' then 'cover'
+				when 'a' then 'auto'
+				else unit x
+
+		x2 = fromX x
+		if x2 != x then return {backgroundSize: x2}
+
+		RE = /^(.*)_(.*)$/
+		if ! test RE, x then throw new Error _ERR + "basi got invalid value: #{x}"
+		[___, width, height] = match RE, x
+		return {backgroundSize: "#{fromX(width)} #{fromX(height)}"}
+				
 
 	bare = (x) ->
 		switch x
@@ -84,6 +95,13 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'x' then {backgroundRepeat: 'repeat-x'}
 			when 'y' then {backgroundRepeat: 'repeat-y'}
 			else throw new Error _ERR + "bare got invalid value: #{x}"
+
+	bapo = (x) ->
+		switch x
+			when 'n' then {backgroundPosition: 'contain'}
+			when 'v' then {backgroundPosition: 'cover'}
+			when 'e' then {backgroundPosition: 'center'}
+			else throw new Error _ERR + "basi got invalid value: #{x}"
 
 	# position
 	pos = (x) ->
