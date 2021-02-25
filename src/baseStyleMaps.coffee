@@ -101,7 +101,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'n' then {backgroundPosition: 'contain'}
 			when 'v' then {backgroundPosition: 'cover'}
 			when 'e' then {backgroundPosition: 'center'}
-			else throw new Error _ERR + "basi got invalid value: #{x}"
+			else throw new Error _ERR + "bapo got invalid value: #{x}"
 
 	# position
 	pos = (x) ->
@@ -409,7 +409,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8}
+	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8}
 
 
 
