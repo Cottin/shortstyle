@@ -197,7 +197,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	xg = (x) -> {flexGrow: parseInt x}
 	xs = (x) -> {flexShrink: parseInt x}
-	xb = (x) -> {flexBasis: parseInt(x)*180+'rem'}
+	xb = (x) -> {flexBasis: unit x}
 
 	# text-align
 	ta = (x) ->
@@ -230,7 +230,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	border = (side, x) ->
 		if x == 0 then return "border#{side}": 'none'
 
-		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d))?$")
+		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+))?$")
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for border: #{x}"
 		[___, clr, ____, size] = match RE, x
 
