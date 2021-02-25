@@ -97,11 +97,22 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			else throw new Error _ERR + "bare got invalid value: #{x}"
 
 	bapo = (x) ->
-		switch x
-			when 'n' then {backgroundPosition: 'contain'}
-			when 'v' then {backgroundPosition: 'cover'}
-			when 'e' then {backgroundPosition: 'center'}
-			else throw new Error _ERR + "bapo got invalid value: #{x}"
+		fromX = (x) ->
+			switch x
+				when 'c' then 'center'
+				when 't' then 'top'
+				when 'b' then 'bottom'
+				when 'r' then 'right'
+				when 'l' then 'left'
+				else unit x
+
+		x2 = fromX x
+		if x2 != x then return {backgroundPosition: x2}
+
+		RE = /^(.*)_(.*)$/
+		if ! test RE, x then throw new Error _ERR + "bapo got invalid value: #{x}"
+		[___, xpos, ypos] = match RE, x
+		return {backgroundPosition: "#{fromX(xpos)} #{fromX(ypos)}"}
 
 	# position
 	pos = (x) ->

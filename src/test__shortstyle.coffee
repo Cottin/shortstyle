@@ -117,6 +117,10 @@ describe 'shortstyle', ->
 		it '1', -> deepEq {backgroundSize: 'cover'}, short('basiv')
 		it '2', -> deepEq {backgroundSize: 'auto 50%'}, short('basia_50%')
 
+	describe 'bapo = background-position: ', ->
+		it '1', -> deepEq {backgroundPosition: 'center'}, short('bapoc')
+		it '2', -> deepEq {backgroundPosition: 'left 50%'}, short('bapol_50%')
+
 	describe 'f = font', ->
 		it 'simple cases', ->
 			fdeepEq short('ft4bu2'),
