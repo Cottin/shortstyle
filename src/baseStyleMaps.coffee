@@ -243,6 +243,11 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'n' then textDecoration: 'none'
 			else throw new Error _ERR + "td (text-decoration) got invalid value #{x}"
 
+	fs = (x) ->
+		if x == 'i' then fontStyle: 'italic'
+		else if x == 'n' then fontStyle: 'normal'
+		else throw new Error _ERR + "fs (font-style) got invalid value #{x}"
+
 	ttra = (x) ->
 		switch x
 			when 'u' then textTransform: 'uppercase'
@@ -420,7 +425,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8}
+	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs}
 
 
 

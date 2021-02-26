@@ -101,9 +101,13 @@ describe 'shortstyle', ->
 		it '1', -> deepEq {flexBasis: '2px'}, short('xb2')
 		it '2', -> deepEq {flexBasis: '33.3%'}, short('xb33.3%')
 
+	describe 'fs = font-style', ->
+		it '1', -> deepEq {fontStyle: 'italic'}, short('fsi')
+
 	describe 'transform', ->
 		it 'rot', -> deepEq {transform: 'rotate(-3deg)'}, short('rot-3')
 		it 'rot + scale', -> deepEq {transform: 'rotate(-4deg) scale(1.05)'}, short('rot-3 scale1.05 rot-4')
+
 
 	# describe 'bg = backgroundColor', ->
 	# 	it '1', ->
@@ -116,6 +120,8 @@ describe 'shortstyle', ->
 	describe 'basi = background-size: ', ->
 		it '1', -> deepEq {backgroundSize: 'cover'}, short('basiv')
 		it '2', -> deepEq {backgroundSize: 'auto 50%'}, short('basia_50%')
+		it '3', -> deepEq {backgroundSize: 'auto 10vmax'}, short('basia_10vmax')
+		it '4', -> deepEq {backgroundSize: 'auto 10vmin'}, short('basia_10vmin')
 
 	describe 'bapo = background-position: ', ->
 		it '1', -> deepEq {backgroundPosition: 'center'}, short('bapoc')
