@@ -234,7 +234,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'c' then textAlign: 'center'
 			when 'l' then textAlign: 'left'
 			when 'r' then textAlign: 'right'
-			else throw new Error _ERR + "ta (text-align) expects c, l or r,
+			when 'j' then textAlign: 'justify'
+			else throw new Error _ERR + "ta (text-align) expects c, l, r or j,
 			given: #{x}"
 
 	td = (x) ->
