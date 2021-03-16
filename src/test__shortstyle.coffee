@@ -159,7 +159,14 @@ describe 'shortstyle', ->
 
 	describe 'sh = box-shadow', ->
 		it '1', ->
-			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1)'}, short('sh1_2_3_4_bk-1'),
+			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1)'}, short('sh1_2_3_4_bk-1')
+		it '2', ->
+			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.2)'},
+			short('sh1_2_3_4_bk-1__4_4_4_4_bk-2')
+
+	describe 'tsh = text-shadow', ->
+		it '1', ->
+			deepEq {textShadow: '1px 2px 3px rgba(0, 0, 0, 0.1)'}, short('tsh1_2_3_bk-1')
 
 	describe 'mix', ->
 		it 'order matters', ->

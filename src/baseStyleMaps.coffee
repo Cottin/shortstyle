@@ -337,13 +337,26 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			else throw new Error _ERR + "invalid cur(sor) '#{x}'"
 
 
-	sh = (v) ->
-		if v == 0 then return boxShadow: 'none'
-		res = match /^(-?\d+)_(-?\d+)_(\d+)_(\d+)_([a-z]{2,3}(-(\d))?)$/, v
-		if !res then return warn "Invalid string given for shadow: #{v}"
-		[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
+	sh = (vOrVs) ->
+		if vOrVs == 0 then return boxShadow: 'none'
 
-		boxShadow: "#{x} #{y} #{blur} #{spread} #{colors(res[5])}"
+		vs = split '__', vOrVs
+
+		shadows = $ vs, map (v) ->
+			res = match /^(-?\d+)_(-?\d+)_(\d+)_(\d+)_([a-z]{2,3}(-(\d))?)$/, v
+			if !res then return warn "Invalid string given for sh (shadow): #{v}"
+			[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
+			return "#{x} #{y} #{blur} #{spread} #{colors(res[5])}"
+
+		boxShadow: $ shadows, join ', '
+
+	tsh = (v) ->
+		if v == 0 then return textShadow: 'none'
+		res = match /^(-?\d+)_(-?\d+)_(\d+)_([a-z]{2,3}(-(\d))?)$/, v
+		if !res then return warn "Invalid string given for tsh (text-shadow): #{v}"
+		[___, x, y, blur] = $ res, map (s) -> unit parseInt s
+
+		textShadow: "#{x} #{y} #{blur} #{colors(res[4])}"
 
 	rot = (deg, style) -> transform deg, 'rotate', "rotate(#{deg}deg)", style
 	scale = (x, style) -> transform x, 'scale', "scale(#{x})", style
@@ -426,7 +439,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs}
+	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh}
 
 
 
