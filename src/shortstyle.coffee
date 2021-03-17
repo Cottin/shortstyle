@@ -139,11 +139,11 @@ addStyle = (allStyleMaps, o) ->
 			else throw new Error "NYI"
 	return res
 
-	
+
 # https://regex101.com/r/0RVVBU/1
 RE_UNIT = ///
-(-)?(\d+)(vh|vw|%|px|vmin|vmax)? # num + unit, eg. 30vw 
-(?:\+(\d+)(vh|vw|%|px|vmin|vmax))? # extra + extraUnit, eg. 8+4vw
+(-)?(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax)? # num + unit, eg. 33.3%
+(?:\+(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax))? # extra + extraUnit, eg. 8+4.5vw
 (?:<(\d+)(vh|vw|%|px|vmin|vmax)?)? # min + minUnit, eg. 8vw<10rem
 (?:>(\d+)(vh|vw|%|px|vmin|vmax)?)? # max + maxUnit, eg. 8vw>20rem
 ///

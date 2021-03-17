@@ -27,13 +27,14 @@ short2 = shortstyle {styleMaps: {}}
 describe 'shortstyle', ->
 	describe 'default unit', ->
 		it '1', -> eq '0.4rem', shortstyle.defaultUnit '4'
+		it '1.1', -> eq '33.3%', shortstyle.defaultUnit '33.3%'
 		it '2', -> eq '-0.4rem', shortstyle.defaultUnit '-4'
 		it '3', -> eq '4vw', shortstyle.defaultUnit '4vw'
 		it '4', -> eq '4vh', shortstyle.defaultUnit '4vh'
 		it '5', -> eq '-10%', shortstyle.defaultUnit '-10%'
 		it '6', -> eq '5vmin', shortstyle.defaultUnit '5vmin'
 
-		it '7', -> eq 'calc(0.4rem+2vw)', shortstyle.defaultUnit '4+2vw'
+		it '7', -> eq 'calc(0.4rem+2.1vw)', shortstyle.defaultUnit '4+2.1vw'
 		it '8', -> eq 'calc(4vw+10%)', shortstyle.defaultUnit '4vw+10%'
 
 		it '9', -> eq 'min(1rem, 4vw)', shortstyle.defaultUnit '4vw<10'
