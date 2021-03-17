@@ -1,11 +1,11 @@
-{__, empty, last, match, max, min, props, test, type} = R = require 'ramda' #auto_require: ramda
-{} = RE = require 'ramda-extras' #auto_require: ramda-extras
+{__, clamp, empty, last, match, max, min, props, test, type} = R = require 'ramda' #auto_require: ramda
+{clamp} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [ːlast] = ['last'] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
 qqq = (...args) -> console.log ...args
 _ = (...xs) -> xs
 assert = require 'assert'
-{deepEq, fdeepEq} = require 'testhelp' #auto_require: testhelp
+{eq, deepEq, fdeepEq} = require 'testhelp' #auto_require: testhelp
 
 shortstyle = require './shortstyle'
 
@@ -25,6 +25,27 @@ short = shortstyle {styleMaps, unit: (x) -> if type(x) == 'Number' then x + 'px'
 short2 = shortstyle {styleMaps: {}}
 
 describe 'shortstyle', ->
+	describe 'default unit', ->
+		it '1', -> eq '0.4rem', shortstyle.defaultUnit '4'
+		it '2', -> eq '-0.4rem', shortstyle.defaultUnit '-4'
+		it '3', -> eq '4vw', shortstyle.defaultUnit '4vw'
+		it '4', -> eq '4vh', shortstyle.defaultUnit '4vh'
+		it '5', -> eq '-10%', shortstyle.defaultUnit '-10%'
+		it '6', -> eq '5vmin', shortstyle.defaultUnit '5vmin'
+
+		it '7', -> eq 'calc(0.4rem+2vw)', shortstyle.defaultUnit '4+2vw'
+		it '8', -> eq 'calc(4vw+10%)', shortstyle.defaultUnit '4vw+10%'
+
+		it '9', -> eq 'min(1rem, 4vw)', shortstyle.defaultUnit '4vw<10'
+		it '10', -> eq 'min(10%, 4vw)', shortstyle.defaultUnit '4vw<10%'
+		it '11', -> eq 'max(4vw, 1rem)', shortstyle.defaultUnit '4vw>10'
+
+		it '12', -> eq 'clamp(1rem, 4vw, 2rem)', shortstyle.defaultUnit '4vw<10>20'
+
+		it '13', -> eq 'clamp(1rem, calc(1.2rem+4vw), 2rem)', shortstyle.defaultUnit '12+4vw<10>20'
+
+		it '14', -> eq 'clamp(1rem, calc(-(1.2rem+4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<10>20'
+
 
 	describe 'edge cases', ->
 		it 'empty string', -> deepEq {}, short('')

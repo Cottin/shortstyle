@@ -1,6 +1,6 @@
 {
   "name": "shortstyle",
-  "version": "0.1.44",
+  "version": "0.1.45",
   "description": "Concise way of writing styles as properties",
   "main": "src/shortstyle.coffee",
   "scripts": {

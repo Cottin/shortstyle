@@ -1,6 +1,6 @@
-curry = require('ramda/src/curry'); fromPairs = require('ramda/src/fromPairs'); head = require('ramda/src/head'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); keys = require('ramda/src/keys'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); toPairs = require('ramda/src/toPairs'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
+clamp = require('ramda/src/clamp'); curry = require('ramda/src/curry'); fromPairs = require('ramda/src/fromPairs'); head = require('ramda/src/head'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); keys = require('ramda/src/keys'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); toPairs = require('ramda/src/toPairs'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
 
-{$} = require 'ramda-extras' #auto_require: ramda-extras
+{$, clamp} = require 'ramda-extras' #auto_require: ramda-extras
 # $ = (data, functions...) -> pipe(functions...)(data)
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
@@ -139,6 +139,15 @@ addStyle = (allStyleMaps, o) ->
 			else throw new Error "NYI"
 	return res
 
+	
+# https://regex101.com/r/0RVVBU/1
+RE_UNIT = ///
+(-)?(\d+)(vh|vw|%|px|vmin|vmax)? # num + unit, eg. 30vw 
+(?:\+(\d+)(vh|vw|%|px|vmin|vmax))? # extra + extraUnit, eg. 8+4vw
+(?:<(\d+)(vh|vw|%|px|vmin|vmax)?)? # min + minUnit, eg. 8vw<10rem
+(?:>(\d+)(vh|vw|%|px|vmin|vmax)?)? # max + maxUnit, eg. 8vw>20rem
+///
+
 
 defaultUnit = (x, base = 0) ->
 	if type(x) == 'Number'
@@ -147,15 +156,34 @@ defaultUnit = (x, base = 0) ->
 		x_ = parseFloat(x)
 		return (x_ + base) / 10 + 'rem'
 	else
-		RE = /^(-)?(\d+)\+(\d+)(vh|vw)?$/
-		RE2 = /^(-?\d+)x$/
-		if test RE, x
-			[___, neg, num_, extra, vhvw] = match RE, x
-			num = parseInt(num_) + base
-			return "calc(#{neg && '-1 * ' || ''}(#{num/10}rem + #{extra * 5 / 10}#{vhvw || 'vw'}))"
-		if test RE2, x # På test... känns inte som det är användbart
-			[___, extra] = match RE2, x
-			return parseInt(extra) * 5 / 10 + 'vh'
+		if test RE_UNIT, x
+			[___, neg, num_, unit, extraNum_, extraUnit, minNum_, minUnit, maxNum_, maxUnit] = match RE_UNIT, x
+			if unit then num = num_
+			else num = parseInt(num_) / 10 + base
+			if extraNum_
+				if extraUnit then extraNum = extraNum_
+				else extraNum = parseInt(extraNum_) / 10 + base
+			if minNum_
+				if minUnit then minNum = minNum_
+				else minNum = parseInt(minNum_) / 10 + base
+			if maxNum_
+				if maxUnit then maxNum = maxNum_
+				else maxNum = parseInt(maxNum_) / 10 + base
+
+			neg = if neg then '-' else ''
+			unit ?= 'rem'
+			minUnit ?= 'rem'
+			maxUnit ?= 'rem'
+
+			if !extraNum then expr = "#{neg}#{num}#{unit}"
+			else
+				if neg then expr = "calc(#{neg}(#{num}#{unit}+#{extraNum}#{extraUnit}))"
+				else expr = "calc(#{neg}#{num}#{unit}+#{extraNum}#{extraUnit})"
+
+			if minNum && maxNum then return "clamp(#{minNum}#{minUnit}, #{expr}, #{maxNum}#{maxUnit})"
+			else if minNum then return "min(#{minNum}#{minUnit}, #{expr})"
+			else if maxNum then return "max(#{expr}, #{maxNum}#{maxUnit})"
+			else return expr
 		else
 			return x
 
