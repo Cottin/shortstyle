@@ -34,8 +34,9 @@ describe 'shortstyle', ->
 		it '5', -> eq '-10%', shortstyle.defaultUnit '-10%'
 		it '6', -> eq '5vmin', shortstyle.defaultUnit '5vmin'
 
-		it '7', -> eq 'calc(0.4rem+2.1vw)', shortstyle.defaultUnit '4+2.1vw'
-		it '8', -> eq 'calc(4vw+10%)', shortstyle.defaultUnit '4vw+10%'
+		it '7', -> eq 'calc(0.4rem + 2.1vw)', shortstyle.defaultUnit '4+2.1vw'
+		it '8', -> eq 'calc(4vw + 10%)', shortstyle.defaultUnit '4vw+10%'
+		it '8.1', -> eq 'calc(0.4rem + 10vw)', shortstyle.defaultUnit '4+10vw'
 
 		it '9', -> eq 'min(1rem, 4vw)', shortstyle.defaultUnit '4vw<10'
 		it '10', -> eq 'min(10%, 4vw)', shortstyle.defaultUnit '4vw<10%'
@@ -43,9 +44,9 @@ describe 'shortstyle', ->
 
 		it '12', -> eq 'clamp(1rem, 4vw, 2rem)', shortstyle.defaultUnit '4vw<10>20'
 
-		it '13', -> eq 'clamp(1rem, calc(1.2rem+4vw), 2rem)', shortstyle.defaultUnit '12+4vw<10>20'
+		it '13', -> eq 'clamp(1rem, calc(1.2rem + 4vw), 2rem)', shortstyle.defaultUnit '12+4vw<10>20'
 
-		it '14', -> eq 'clamp(1rem, calc(-(1.2rem+4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<10>20'
+		it '14', -> eq 'clamp(1rem, calc(-1 * (1.2rem + 4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<10>20'
 
 
 	describe 'edge cases', ->

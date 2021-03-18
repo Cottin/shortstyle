@@ -177,8 +177,8 @@ defaultUnit = (x, base = 0) ->
 
 			if !extraNum then expr = "#{neg}#{num}#{unit}"
 			else
-				if neg then expr = "calc(#{neg}(#{num}#{unit}+#{extraNum}#{extraUnit}))"
-				else expr = "calc(#{neg}#{num}#{unit}+#{extraNum}#{extraUnit})"
+				if neg then expr = "calc(-1 * (#{num}#{unit} + #{extraNum}#{extraUnit}))"
+				else expr = "calc(#{neg}#{num}#{unit} + #{extraNum}#{extraUnit})"
 
 			if minNum && maxNum then return "clamp(#{minNum}#{minUnit}, #{expr}, #{maxNum}#{maxUnit})"
 			else if minNum then return "min(#{minNum}#{minUnit}, #{expr})"
