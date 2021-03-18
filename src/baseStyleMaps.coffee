@@ -61,7 +61,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	# border-radius
 	br = _oneTwoFour 'borderRadius'
-	br.refine = (x) -> replace /_/g, ' ', unit(x)
+	br.refine = (x) -> replace /_/g, ' ', x
 
 	lh = (x) -> {lineHeight: unit(x)}
 

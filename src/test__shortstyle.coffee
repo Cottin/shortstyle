@@ -106,9 +106,9 @@ describe 'shortstyle', ->
 		it 'simple', -> deepEq {top: '10px'}, short('top10')
 
 	describe 'br = border-radius', ->
-		it 'simple', -> deepEq {borderRadius: '87px'}, short('br87')
-		it 'four', ->
-			deepEq {borderRadius: '0px 10px 2px 3px'}, short('br0_10_2_3')
+		it '1', -> deepEq {borderRadius: '87px'}, short('br87')
+		it '2', -> deepEq {borderRadius: '0.8rem'}, short2('br8')
+		it '3', -> deepEq {borderRadius: '0px 10px 2px 3px'}, short('br0_10_2_3')
 
 	describe 'bord = border', ->
 		it '1', -> deepEq {border: '0.2rem solid rgba(0, 0, 0, 1)'}, short2('bordbk_2')
