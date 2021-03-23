@@ -1,4 +1,4 @@
-__ = require('ramda/src/__'); all = require('ramda/src/all'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
+__ = require('ramda/src/__'); all = require('ramda/src/all'); contains = require('ramda/src/contains'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
 qqq = (...args) -> console.log ...args
@@ -73,7 +73,6 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	baurl = (url) -> backgroundImage: "url(#{url})"
 
 	basi = (x) ->
-		qqq 'basi 1', x
 		fromX = (x) ->
 			switch x
 				when 'n' then 'contain'
@@ -81,16 +80,11 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 				when 'a' then 'auto'
 				else unit x
 
-		x2 = fromX x
-		qqq 'basi 2', x2
-		if x2 != x
-			qqq 'basi 3'
-			return {backgroundSize: x2}
+		if ! contains '_', x then return {backgroundSize: fromX x}
 
 		RE = /^(.*)_(.*)$/
 		if ! test RE, x then throw new Error _ERR + "basi got invalid value: #{x}"
 		[___, width, height] = match RE, x
-		qqq 'basi 4', {backgroundSize: "#{fromX(width)} #{fromX(height)}"}
 		return {backgroundSize: "#{fromX(width)} #{fromX(height)}"}
 				
 

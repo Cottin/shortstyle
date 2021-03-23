@@ -142,12 +142,9 @@ describe 'shortstyle', ->
 
 	describe 'basi = background-size: ', ->
 		it '1', -> deepEq {backgroundSize: 'cover'}, short('basiv')
-		it '2', -> deepEq {backgroundSize: 'auto 104%'}, short('basia_104%')
-		it '3', -> deepEq {backgroundSize: 'auto 10vmax'}, short('basia_10vmax')
-		it '4', -> deepEq {backgroundSize: 'auto 10vmin'}, short('basia_10vmin')
-		# it.only 'test', ->
-		# 	qqq short('xrcc w100% xh300 bg1 h50vw mt120 <600[mt12vw] baurl/img/sky1.svg basia_30% barex bapoc')
-		# 	deepEq 1, 2
+		it '2', -> deepEq {backgroundSize: 'auto 104%'}, short2('basia_104%')
+		it '3', -> deepEq {backgroundSize: 'auto 10vmax'}, short2('basia_10vmax')
+		it '4', -> deepEq {backgroundSize: 'auto 10vmin'}, short2('basia_10vmin')
 
 	describe 'bapo = background-position: ', ->
 		it '1', -> deepEq {backgroundPosition: 'center'}, short('bapoc')
