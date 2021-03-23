@@ -86,6 +86,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		RE = /^(.*)_(.*)$/
 		if ! test RE, x then throw new Error _ERR + "basi got invalid value: #{x}"
 		[___, width, height] = match RE, x
+		qqq 'basi', {backgroundSize: "#{fromX(width)} #{fromX(height)}"}
 		return {backgroundSize: "#{fromX(width)} #{fromX(height)}"}
 				
 
