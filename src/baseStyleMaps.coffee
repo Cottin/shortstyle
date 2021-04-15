@@ -206,7 +206,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 		switch x
 			when 'n'
 				userSelect: 'none'
-				'-webkit-tap-highlight-color': 'none'
+				'-webkit-tap-highlight-color': 'transparent'
 			else throw new Error _ERR + "usel (user-select) got invalid type: #{x}"
 
 	dis = (x) ->
