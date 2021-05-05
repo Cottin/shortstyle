@@ -253,6 +253,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'u' then textTransform: 'uppercase'
 			when 'l' then textTransform: 'lowercase'
 			when 'c' then textTransform: 'capitalize'
+			when 'n' then textTransform: 'none'
 
 	# ex. bordwh or bordwh_1
 	bord = (x) -> border '', x
