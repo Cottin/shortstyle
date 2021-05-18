@@ -1,6 +1,6 @@
-clamp = require('ramda/src/clamp'); curry = require('ramda/src/curry'); fromPairs = require('ramda/src/fromPairs'); head = require('ramda/src/head'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); keys = require('ramda/src/keys'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); toPairs = require('ramda/src/toPairs'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
+clamp = require('ramda/src/clamp'); curry = require('ramda/src/curry'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); last = require('ramda/src/last'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); mergeWith = require('ramda/src/mergeWith'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
 
-{$, clamp} = require 'ramda-extras' #auto_require: ramda-extras
+{$, clamp, sf0} = require 'ramda-extras' #auto_require: ramda-extras
 # $ = (data, functions...) -> pipe(functions...)(data)
 [] = [] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
@@ -12,22 +12,44 @@ colors = require './colors'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-_selectors =
-	f: ':first-child'
-	l: ':last-child' 
-	e: ':nth-child(even)'
-	o: ':nth-child(odd)'
-	# https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
-	# https://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
-	ho: {'@media (hover: hover)': ':hover'}
-	fo: ':focus'
-	'2l': ':nth-last-child(2)'
-	fin: {'@media (pointer: fine)': ''}
-	coa: {'@media (pointer: coarse)': ''}
-	ac: ':active'
+baseSelectors = {}
+baseSelectors.f = (body) -> {':first-child': body}
+baseSelectors.l = (body) -> {':last-child': body}
+baseSelectors.e = (body) -> {':nth-child(even)': body}
+baseSelectors.o = (body) -> {':nth-child(odd)': body}
+# https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
+# https://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
+baseSelectors.ho = (body) -> {'@media (hover: hover)': {':hover': body}}
+baseSelectors.fo = (body) -> {':focus': body}
+baseSelectors['2l'] = (body) -> {':nth-last-child(2)': body}
+baseSelectors.fin = (body) -> {'@media (pointer: fine)': body}
+baseSelectors.coa = (body) -> {'@media (pointer: coarse)': body}
+baseSelectors.ac = (body) -> {':active': body}
 
-baseSelectors = $ _selectors, toPairs, map(([k, v]) -> ['n'+k, ":not(#{v})"]), fromPairs, merge _selectors
-baseSelectors.hofo = [{'@media (hover: hover)': ':hover'}, ':focus']
+baseSelectors.nf = (body) -> {':not(:first-child)': body}
+baseSelectors.nl = (body) -> {':not(:last-child)': body}
+baseSelectors.nac = (body) -> {':not(:active)': body}
+
+baseSelectors.hofo = (body) -> {'@media (hover: hover)': {':hover': body}, ':focus': body}
+
+# selectors for hover and focus that targets children
+baseSelectors.hoc1 = (body) -> {'@media (hover: hover)': {':hover': {'& .c1': body}}}
+baseSelectors.hoc2 = (body) -> {'@media (hover: hover)': {':hover': {'& .c2': body}}}
+baseSelectors.hoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': body}}}
+baseSelectors.hoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}}
+baseSelectors.hoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}}
+
+baseSelectors.foc1 = (body) -> {':focus': {'& .c1': body}}
+baseSelectors.foc2 = (body) -> {':focus': {'& .c2': body}}
+baseSelectors.foc3 = (body) -> {':focus': {'& .c3': body}}
+baseSelectors.foc4 = (body) -> {':focus': {'& .c4': body}}
+baseSelectors.foc5 = (body) -> {':focus': {'& .c5': body}}
+
+baseSelectors.hofoc1 = (body) -> {'@media (hover: hover)': {':hover': {'& .c1': body}}, ':focus': {'& .c1': body}}
+baseSelectors.hofoc2 = (body) -> {'@media (hover: hover)': {':hover': {'& .c2': body}}, ':focus': {'& .c2': body}}
+baseSelectors.hofoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': body}}, ':focus': {'& .c3': body}}
+baseSelectors.hofoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}, ':focus': {'& .c4': body}}
+baseSelectors.hofoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}, ':focus': {'& .c5': body}}
 
 # R.match(/(\w)(\d)/g, 'a1 b2 c3') returns ["a1", "b2", "c3"]
 # matchG(/(\w)(\d)/g, 'a1 b2 c3') returns [["a1", "a", "1"], ["b2", "b", "2"], ["c3", "c", "3"]]
@@ -82,6 +104,16 @@ setOrAppend = (k, x, o) ->
 		if type(x) == 'String' then o[k] += ' ' + x
 		else if type(x) == 'Object' then o[k] = merge o[k], x
 
+# Helper for merging that handles strings and empty objects '': {}
+mergeNice = mergeWith (a, b) ->
+	if type(a) == 'String'
+		if type(b) == 'String' then b + ' ' + a
+		else mergeNice {'': a}, b
+	else if type(a) == 'Object'
+		if type(b) == 'Object' then mergeNice a, b
+		else mergeNice a, {'': b}
+	else throw new Error 'NYI'
+
 addSelectors = (allSelectors, o) ->
 	REsels = /(\w+)\((.*?)\)\s?/g
 	res = {}
@@ -92,20 +124,11 @@ addSelectors = (allSelectors, o) ->
 		for m in ms
 			[___, sel, body] = m
 			selector = allSelectors[sel]
-			if !selector then console.warn "invalid selector: #{sel}"
-			else if type(selector) == 'Array'
-				for x in selector
-					if type(x) == 'String' then setOrAppend x, body, res[k]
-					else if type(x) == 'Object'
-						media = $ x, keys, head
-						setOrAppend media, {"#{x[media]}": body}, res[k]
-					else throw new Error 'NYI'
-			else if type(selector) == 'Object'
-				media = $ selector, keys, head
-				setOrAppend media, {"#{selector[media]}": body}, res[k]
-			else if type(selector) == 'String'
-				setOrAppend selector, body, res[k]
-			else throw new Error "NYI selector type #{type(selector)}"
+			if !selector
+				console.warn "invalid selector: #{sel}"
+				return res
+			content = selector body
+			res[k] = mergeNice content, res[k]
 
 	return res
 
@@ -136,7 +159,8 @@ addStyle = (allStyleMaps, o) ->
 					val = $ v, allStyleMaps[k].refine || identity, tryParseNum
 					Object.assign style, allStyleMaps[k](val, style)
 				res[key] = style
-			else throw new Error "NYI"
+			else
+				throw new Error "NYI addStyle for: #{sf0 v} (#{type v})"
 	return res
 
 

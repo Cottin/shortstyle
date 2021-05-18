@@ -204,6 +204,20 @@ describe 'shortstyle', ->
 		# it ':f', -> deepEq {':first-child': {marginRight: '10vh'}}, short('mr10vh:f')
 		# it ':nl', -> deepEq {':not(ːlast-child)': {marginRight: '10vh'}}, short('mr10vh:nl')
 
+		it 'hofo child', ->
+			res = short 'hofoc1(p1)'
+			expected = {
+				'@media (hover: hover)': {':hover': {'& .c1': {padding: '1px'}}}
+				':focus': {'& .c1': {padding: '1px'}}
+			}
+			deepEq expected, res
+
+		it 'Edge case', ->
+			res = short 'ho(p1) hoc1(p2)'
+			expected =
+				'@media (hover: hover)': { ':hover': {padding: '1px', '& .c1': {padding: '2px'}}}
+			deepEq expected, res
+
 		it '>(f())', ->
 			res = short('ml2 <100[ml1 nl(pt5vh mr10vh)] >200[mb1 hofo(pb3 pt2)] coa(pb10)')
 			expected = {

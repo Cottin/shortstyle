@@ -368,6 +368,14 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			if test(re, style.transform) then transform: replace re, full, style.transform
 			else transform: style.transform + " #{full}"
 
+	fill = (x) ->
+		if x == 0 then fill: 'none'
+		else fill: colors x
+
+	stroke = (x) ->
+		if x == 0 then stroke: 'none'
+		else stroke: colors x
+
 	# DEV
 	bg1 = -> backgroundColor: '#FDEDED'
 	bg2 = -> backgroundColor: '#EDEFFD'
@@ -439,7 +447,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh}
+	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh, fill,
+	stroke}
 
 
 
