@@ -59,6 +59,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	pl = (x) -> {paddingLeft: unit(x)}
 	pr = (x) -> {paddingRight: unit(x)}
 
+
 	# border-radius
 	br = _oneTwoFour 'borderRadius'
 	br.refine = (x) -> replace /_/g, ' ', x
@@ -121,6 +122,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'r' then {position: 'relative'}
 			when 's' then {position: 'static'}
 			when 'y' then {position: 'sticky'}
+			when 'i' then {position: 'initial'}
 			else throw new Error _ERR + "pos doesn't support #{x}"
 
 	# flex-box
@@ -265,7 +267,7 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	border = (side, x) ->
 		if x == 0 then return "border#{side}": 'none'
 
-		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+))?$")
+		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+(:?px)?))?$")
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for border: #{x}"
 		[___, clr, ____, size] = match RE, x
 
@@ -322,9 +324,9 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	# text-overflow
 	tov = (x) ->
 		switch x
-			when 'e' then overflow: 'ellipsis'
-			when 'c' then overflow: 'clip'
-			when 'i' then overflow: 'initial'
+			when 'e' then textOverflow: 'ellipsis'
+			when 'c' then textOverflow: 'clip'
+			when 'i' then textOverflow: 'initial'
 			else throw new Error _ERR + "tov (text-overflow) expects e, c, or i,
 			given: #{x}"
 
