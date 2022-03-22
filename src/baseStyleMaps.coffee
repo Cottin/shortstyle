@@ -10,13 +10,9 @@ colorsStatic = require './colors'
 
 ###### Probably no need to override:
 
-defaultUnit = (x) ->
-	if 'Number' == type x then x + 'px'
-	else x
-
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-getBaseStyleMaps = (unit = defaultUnit, colors) ->
+getBaseStyleMaps = (unit, colors, families) ->
 	###### UNIT BASED
 
 	# height
@@ -70,6 +66,18 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	bg = (x) ->
 		if x == 0 then backgroundColor: 'transparent'
 		else backgroundColor: colors x
+
+	RElin = new RegExp("^(#{colorsStatic.REstr})__(#{colorsStatic.REstr})$")
+	balin = (clrs) ->
+		[start, stop] = split '__', clrs
+
+		if !start || !stop then throw new Error 'Not yet implemented'
+		
+		[___, color1, color2] = match RElin, clrs
+		if !color1 || !color2 then return warn "Invalid string given for balin (background:linear-gradient): #{v}"
+		return {background: "linear-gradient(-180deg, #{colors color1} 0%, #{colors color2} 100%)"}
+
+		return grad
 
 	baurl = (url) -> backgroundImage: "url(#{url})"
 
@@ -218,6 +226,9 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'b' then display: 'block'
 			when 'f' then display: 'flex'
 			when 'n' then display: 'none'
+			when 't' then display: 'table'
+			when 'tr' then display: 'table-row'
+			when 'tc' then display: 'table-cell'
 			else throw new Error _ERR + "dis (display) got invalid type: #{x}"
 
 	vis = (x) ->
@@ -228,6 +239,11 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	xg = (x) -> {flexGrow: parseInt x}
 	xs = (x) -> {flexShrink: parseInt x}
 	xb = (x) -> {flexBasis: unit x}
+	# xw = (wrap) ->
+	# 	if wrap == 'w' then {flexWrap: 'wrap'}
+	# 	else if wrap == 'r' then {flexWrap: 'wrap-reverse'}
+	# 	else if wrap == '_' then {}
+	# 	else throw new Error _ERR + "xw (flex-wrap) got invalid argument: #{wrap}"
 
 	# text-align
 	ta = (x) ->
@@ -238,6 +254,16 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			when 'j' then textAlign: 'justify'
 			else throw new Error _ERR + "ta (text-align) expects c, l, r or j,
 			given: #{x}"
+
+	va = (x) ->
+		switch x
+			when 'm' then verticalAlign: 'middle'
+			when 't' then verticalAlign: 'top'
+			when 'b' then verticalAlign: 'bottom'
+			when 'a' then verticalAlign: 'baseline'
+			else throw new Error _ERR + "ta (text-align) expects c, l, r or j,
+			given: #{x}"
+
 
 	td = (x) ->
 		switch x
@@ -339,13 +365,15 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 			else throw new Error _ERR + "invalid cur(sor) '#{x}'"
 
 
+	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>3__0_6_11_3_bk>9 (double shadow)
+	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(\\d+)_(#{colorsStatic.REstr})$")
 	sh = (vOrVs) ->
 		if vOrVs == 0 then return boxShadow: 'none'
 
 		vs = split '__', vOrVs
 
 		shadows = $ vs, map (v) ->
-			res = match /^(-?\d+)_(-?\d+)_(\d+)_(\d+)_([a-z]{2,3}(-(\d))?)$/, v
+			res = match REsh, v
 			if !res then return warn "Invalid string given for sh (shadow): #{v}"
 			[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
 			return "#{x} #{y} #{blur} #{spread} #{colors(res[5])}"
@@ -388,57 +416,33 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 	bg7 = -> backgroundColor: '#E8FFC1'
 	bg8 = -> backgroundColor: '#B9FAFC'
 
-	##############################################################################
-	##### Functions below this line are things you'd want to override in your app:
-	##### (Implementations below are provided as inspiration / templates)
-
-	# font
+	# font - note that you could override font if needed in your app
 	f = (x) ->
 		ret = {}
 		if type(x) != 'String' then throw new Error _ERR + "font expected type string, given: #{x}"
 		
+		# eg. fabua-35-15
 		RE = ///^
 		([a-z_]) # family
-		([\d]{1,2}|_) # size
-		([a-z]{2,3}|__) # color
-		([\d_])? # weight
+		([a-z]{2,3}(?:[><]\d)?(?:-\d)?|_)? # color
+		(\d|_)? # weight
+		(?:-(.*)|_)? # size
 		$///
+
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for font: #{x}"
-		[_, family, size, color, weight] = match RE, x
+		[___, family, clr, weight, size] = match RE, x
 
 		switch family
-			when 't' then ret.fontFamily = 'Times New Roman, Times, serif'
-			when 'a' then ret.fontFamily = 'Arial, Helvetica, sans-serif'
-			when 'c' then ret.fontFamily = 'Comic Sans MS, cursive, sans-serif'
+			when 'a' then ret.fontFamily = families[0]
+			when 'b' then ret.fontFamily = families[1]
+			when 'c' then ret.fontFamily = families[2]
+			when 'd' then ret.fontFamily = families[3]
 			when '_' then # no-op
 			else throw new Error _ERR + "invalid family '#{family}' for t: #{x}"
 
-		switch size
-			when '1' then ret.fontSize = 8 + 'px'
-			when '2' then ret.fontSize = 9 + 'px'
-			when '3' then ret.fontSize = 11 + 'px'
-			when '4' then ret.fontSize = 12 + 'px'
-			when '5' then ret.fontSize = 13 + 'px'
-			when '6' then ret.fontSize = 15 + 'px'
-			when '7' then ret.fontSize = 18 + 'px'
-			when '8' then ret.fontSize = 25 + 'px'
-			when '9' then ret.fontSize = 30 + 'px'
-			when '10' then ret.fontSize = 35 + 'px'
-			when '11' then ret.fontSize = 40 + 'px'
-			when '_' then # no-op
-			else throw new Error _ERR + "invalid size '#{size}' for t: #{x}"
+		if size && size != '_' then ret.fontSize = unit size
 
-
-		opacity = 1
-		switch color
-			when 'bk' then ret.color = "rgba(0, 0, 0, #{opacity})"
-			when 'wh' then ret.color = "rgba(255, 255, 255, #{opacity})"
-			when 're' then ret.color = "rgba(100, 0, 0, #{opacity})"
-			when 'gn' then ret.color = "rgba(0, 100, 0, #{opacity})"
-			when 'bu' then ret.color = "rgba(0, 0, 100, #{opacity})"
-			when 'lbu' then ret.color = "rgba(110, 200, 250, #{opacity})"
-			when '__' then # no-op
-			else throw new Error _ERR + "invalid color '#{color}' for t: #{x}"
+		if clr && clr != '_' then ret.color = colors clr
 
 		switch weight
 			when '_' then # noop
@@ -449,8 +453,8 @@ getBaseStyleMaps = (unit = defaultUnit, colors) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
-	rot, scale, sh, jus, als, baurl, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh, fill,
-	stroke}
+	rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
+	fill, stroke, va}
 
 
 

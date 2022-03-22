@@ -11,13 +11,19 @@ _warn = (msg, ret) ->
 
 RE = ///^
 ([a-z]{2,3}) # color
-(-(\d))? # opacity
+([><]\d)? # adjustment of brightnes = ligher / darker
+(-\d)? # opacity
 $///
 
-REstr = "(?:[a-z]{2,3})(?:-\\d)?"
+REstr = "(?:[a-z]{2,3})(?:[><]\\d)?(?:-\\d)?"
+
+# HSB - Hue Saturation Brightness
+# HSV - Hue Saturation Value (same as HSB)
+# HSL - Hue Saturation Lightness
 
 # https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
-hsvToRgb = (h, s, v) ->
+hsvToRgb = (_h, _s, _v) ->
+  [h, s, v] = [_h/360, _s/100, _v/100]
   r = g = b = i = f = p = q = t = undefined
   i = Math.floor(h * 6)
   f = h * 6 - i
@@ -36,19 +42,33 @@ hsvToRgb = (h, s, v) ->
 decompose = (clr) ->
   if !clr || clr == 'undefined' then return ['!!', 1.0] # be nice and help with undefined
   if ! test RE, clr then return ['!!', 1.0]
-  [isMatch, base, ___, _opacity] = match RE, clr
-  opacity = if _opacity then parseInt(_opacity) / 10 else 1.0
-  return [base, opacity]
+  [isMatch, base, _adj, _opacity] = match RE, clr
+  adj = if !_adj then 0 else parseInt(_adj[1]) * 10 * (_adj[0] == '<' && -1 || 1)
+  opacity = if _opacity then parseInt(_opacity[1]) / 10 else 1.0
+  return [base, adj, opacity]
 
+
+fuchsia = _ 300, 100, 100
 
 buildColors = (baseColors) ->
-  baseColorsRgb = $ baseColors, mapO ([h, s, b]) -> hsvToRgb h/360, s/100, b/100
+  baseColorsRgb = $ baseColors, mapO ([h, s, b]) -> hsvToRgb h, s, b
   baseColorsRgbStr = $ baseColorsRgb, mapO join ', '
 
+  memo = {}
   colors = (clr) ->
-    [base, opacity] = decompose clr
-    if ! baseColors[base] then base = '!!'
-    return "rgba(#{baseColorsRgbStr[base]}, #{opacity})"
+    if memo[clr] then return memo[clr]
+
+    [base, adj, opacity] = decompose clr
+    [h, s, b] = baseColors[base] || fuchsia
+    rgb = join ', ', hsvToRgb h, s, b + adj
+    return "rgba(#{rgb}, #{opacity})"
+
+    # if ! baseColors[base] then rgb = fuchsia
+    # else rgb = baseColorsRgbStr[base]
+    # if adj
+    #   [h, s, b] = baseColors[base]
+    #   rgb = join ', ', hsvToRgb h, s, b + adj
+    # return "rgba(#{rgb}, #{opacity})"
 
   colors.forBg = (bg) ->
     [base, opacity] = decompose bg
@@ -60,11 +80,11 @@ buildColors = (baseColors) ->
 
   colors.hsb = (clr) ->
     [base, opacity] = decompose clr
-    if ! baseColors[base] then return baseColors['!!']
+    if ! baseColors[base] then return baseColors['!!'] || fuchsia
     return baseColors[base]
 
   return colors
 
 
 #auto_export: none_
-module.exports = {RE, REstr, hsvToRgb, decompose, buildColors}
+module.exports = {RE, REstr, hsvToRgb, decompose, fuchsia, buildColors}

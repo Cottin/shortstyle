@@ -1,4 +1,4 @@
-clamp = require('ramda/src/clamp'); curry = require('ramda/src/curry'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); last = require('ramda/src/last'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); mergeWith = require('ramda/src/mergeWith'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
+clamp = require('ramda/src/clamp'); clone = require('ramda/src/clone'); curry = require('ramda/src/curry'); filter = require('ramda/src/filter'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); mergeWith = require('ramda/src/mergeWith'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
 
 {$, clamp, sf0} = require 'ramda-extras' #auto_require: ramda-extras
 # $ = (data, functions...) -> pipe(functions...)(data)
@@ -217,14 +217,40 @@ defaultColors = colors.buildColors
 	gn: [177, 51, 35]
 	ye: [52, 58, 99]
 
+defaultFamilies = ['Arial, sans', 'Times New Roman, Times, serif']
 
+# Pre-executes styleMaps defined as strings and returns allStyleMaps as map of functions
+# eg. {_myStyle1: () -> backgroundColor: 'lime', _myStyle2: 'p2 _myStyle1'}
+#   returns {..., _myStyle2: () -> backgroundColor: 'lime', padding: 2}
+prepareAllStyleMaps = (baseStyleMaps, styleMaps, allSelectors) ->
+	styleMapsF = $ styleMaps, filter (x) -> 'Function' == type x
+	styleMapsS = $ styleMaps, filter (x) -> 'String' == type x
+	simpleStyleMaps = merge baseStyleMaps, styleMapsF
 
+	styleMapsSasF = $ styleMapsS, map (str) ->
+		# copy paste from below
+		style1 = extractMediaQueries str
+		style2 = addSelectors allSelectors, style1
+		style3 = addStyle simpleStyleMaps, style2
+		style4 = untangle style3
+
+		return () -> style4
+
+	return merge simpleStyleMaps, styleMapsSasF
+
+handleESModule = (o) ->
+	if o.__esModule
+		cleanO = {}
+		for k, v of o then cleanO[k] = v
+		return cleanO
+	else o
 
 # Takes styleMaps and unit function and returns parse and createElementHelper
-shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, selectors = {}}) ->
-	baseStyleMaps = getBaseStyleMaps unit, colors
-	allStyleMaps = merge baseStyleMaps, styleMaps
+shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, families = defaultFamilies, selectors = {}}) ->
+	styleMapsObj = handleESModule styleMaps
+	baseStyleMaps = getBaseStyleMaps unit, colors, families
 	allSelectors = merge baseSelectors, selectors
+	allStyleMaps = prepareAllStyleMaps baseStyleMaps, clone(styleMapsObj), allSelectors
 	memo = {}
 
 	return (str) ->

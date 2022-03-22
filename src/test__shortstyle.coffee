@@ -10,6 +10,8 @@ assert = require 'assert'
 shortstyle = require './shortstyle'
 
 styleMaps =
+	_box0: 'p2 _box2'
+
 	_box: ->
 		backgroundColor: '#FEFFEF'
 		boxShadow: '0 1px 2px 0 rgba(0,0,0,0.37)'
@@ -20,8 +22,19 @@ styleMaps =
 		boxShadow: '1 1px 3px 0 rgba(0,0,0,0.37)'
 		borderRadius: 29
 
+colors = shortstyle.colors.buildColors
+	wh: _ 0, 0, 100
+	bk: _ 0, 0, 0
+	re: _ 11, 95, 43
+	bu: _ 206, 34, 52 # 88, 113, 133 # 2 brighter: 121, 157, 184 # 2 darker 54, 70, 82
 
-short = shortstyle {styleMaps, unit: (x) -> if type(x) == 'Number' then x + 'px' else x}
+families = ['Arial, sans-serif', 'Times New Roman, Times, serif']
+
+unit = (x) ->
+	if type(x) == 'Number' || ! isNaN(x) then x + 'px'
+	else x
+
+short = shortstyle {styleMaps, colors, families, unit}
 short2 = shortstyle {styleMaps: {}}
 
 describe 'shortstyle', ->
@@ -48,6 +61,11 @@ describe 'shortstyle', ->
 
 		it '14', -> eq 'clamp(1rem, calc(-1 * (1.2rem + 4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<10>20'
 
+	describe 'colors', ->
+		it '-', -> eq 'rgba(0, 0, 0, 0.2)', colors('bk-2')
+		it '>', -> eq 'rgba(121, 157, 184, 1)', colors('bu>2')
+		it '<', -> eq 'rgba(54, 70, 82, 1)', colors('bu<2')
+		it '<-', -> eq 'rgba(54, 70, 82, 0.3)', colors('bu<2-3')
 
 	describe 'edge cases', ->
 		it 'empty string', -> deepEq {}, short('')
@@ -136,6 +154,11 @@ describe 'shortstyle', ->
 	# 	it '1', ->
 	# 		deepEq {backgroundColor: 'blue'}, short('bga1')
 
+	describe 'balin = background: linear-gradient', ->
+		it '1', ->
+			deepEq {background: 'linear-gradient(-180deg, rgba(128, 128, 128, 0.1) 0%, rgba(204, 204, 204, 0.3) 100%)'},
+			short('balinbk>5-1__bk>8-3')
+
 	describe 'baurl = background-image: url(...)', ->
 		it '1', ->
 			deepEq {backgroundImage: 'url(/img/test.jpg)'}, short('baurl/img/test.jpg')
@@ -152,31 +175,40 @@ describe 'shortstyle', ->
 
 	describe 'f = font', ->
 		it 'simple cases', ->
-			fdeepEq short('ft4bu2'),
-				fontFamily: 'Times New Roman, Times, serif'
+			fdeepEq short('fabu2-12'),
+				fontFamily: 'Arial, sans-serif'
 				fontSize: '12px'
 				fontWeight: 200
-				color: 'rgba(0, 0, 100, 1)'
+				color: 'rgba(88, 113, 133, 1)'
 
 		describe '_', ->
 			it 'familly', ->
-				fdeepEq short('ft____'),
-					fontFamily: 'Times New Roman, Times, serif'
+				fdeepEq short('fa___'),
+					fontFamily: 'Arial, sans-serif'
+
+				fdeepEq short('fa__'),
+					fontFamily: 'Arial, sans-serif'
+
+				fdeepEq short('fa_'),
+					fontFamily: 'Arial, sans-serif'
+
+				fdeepEq short('fa'),
+					fontFamily: 'Arial, sans-serif'
 
 			it 'size', ->
-				fdeepEq short('f_4___'),
+				fdeepEq short('f___-12'),
 					fontSize: '12px'
 
 			it 'color', ->
-				fdeepEq short('f__lbu_'),
-					color: 'rgba(110, 200, 250, 1)'
+				fdeepEq short('f_bu>2-1'),
+					color: 'rgba(121, 157, 184, 0.1)'
 
 			it 'weight', ->
-				fdeepEq short('f____2'),
+				fdeepEq short('f__2'),
 				fontWeight: 200
 
 			it 'size + weight', ->
-				fdeepEq short('f_4__2'),
+				fdeepEq short('f__2-12'),
 				fontWeight: 200
 				fontSize: '12px'
 
@@ -184,8 +216,8 @@ describe 'shortstyle', ->
 		it '1', ->
 			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1)'}, short('sh1_2_3_4_bk-1')
 		it '2', ->
-			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.2)'},
-			short('sh1_2_3_4_bk-1__4_4_4_4_bk-2')
+			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(128, 128, 128, 0.2)'},
+			short('sh1_2_3_4_bk-1__4_4_4_4_bk>5-2')
 
 	describe 'tsh = text-shadow', ->
 		it '1', ->
@@ -197,6 +229,13 @@ describe 'shortstyle', ->
 				backgroundColor: '#FEFFEF'
 				boxShadow: '0 1px 2px 0 rgba(0,0,0,0.37)'
 				borderRadius: 9
+
+		it 'support strings', ->
+			fdeepEq short('_box0'),
+				backgroundColor: 'red'
+				boxShadow: '1 1px 3px 0 rgba(0,0,0,0.37)'
+				borderRadius: 29
+				padding: '2px'
 
 
 	describe 'selectors & media queries', ->
