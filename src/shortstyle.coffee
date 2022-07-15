@@ -39,6 +39,13 @@ baseSelectors.hoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': bo
 baseSelectors.hoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}}
 baseSelectors.hoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}}
 
+# if we're already using hoc1 setting ho on child has too low specificity, this is a workaround
+baseSelectors.hoc1ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c1:hover': body}}}
+baseSelectors.hoc2ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c2:hover': body}}}
+baseSelectors.hoc3ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c3:hover': body}}}
+baseSelectors.hoc4ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c4:hover': body}}}
+baseSelectors.hoc5ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c5:hover': body}}}
+
 baseSelectors.foc1 = (body) -> {':focus': {'& .c1': body}}
 baseSelectors.foc2 = (body) -> {':focus': {'& .c2': body}}
 baseSelectors.foc3 = (body) -> {':focus': {'& .c3': body}}
@@ -219,7 +226,7 @@ defaultColors = colors.buildColors
 
 defaultFamilies = ['Arial, sans', 'Times New Roman, Times, serif']
 
-# Pre-executes styleMaps defined as strings and returns allStyleMaps as map of functions
+# Pre-executes styleMaps defined as strings and returns allStyleMaps
 # eg. {_myStyle1: () -> backgroundColor: 'lime', _myStyle2: 'p2 _myStyle1'}
 #   returns {..., _myStyle2: () -> backgroundColor: 'lime', padding: 2}
 prepareAllStyleMaps = (baseStyleMaps, styleMaps, allSelectors) ->

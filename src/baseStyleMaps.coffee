@@ -234,6 +234,7 @@ getBaseStyleMaps = (unit, colors, families) ->
 	vis = (x) ->
 		switch x
 			when 'h' then visibility: 'hidden'
+			when 'v' then visibility: 'visible'
 			else throw new Error _ERR + "vis (visibility) got invalid type: #{x}"
 
 	xg = (x) -> {flexGrow: parseInt x}
@@ -433,7 +434,7 @@ getBaseStyleMaps = (unit, colors, families) ->
 		[___, family, clr, weight, size] = match RE, x
 
 		switch family
-			when 'a' then ret.fontFamily = families[0]
+			when 'a' then 'unset'
 			when 'b' then ret.fontFamily = families[1]
 			when 'c' then ret.fontFamily = families[2]
 			when 'd' then ret.fontFamily = families[3]
