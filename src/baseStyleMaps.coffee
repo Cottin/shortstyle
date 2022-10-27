@@ -1,4 +1,4 @@
-__ = require('ramda/src/__'); all = require('ramda/src/all'); contains = require('ramda/src/contains'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); tap = require('ramda/src/tap'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
+__ = require('ramda/src/__'); all = require('ramda/src/all'); contains = require('ramda/src/contains'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
 {cc, $} = require 'ramda-extras' #auto_require: ramda-extras
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
 qqq = (...args) -> console.log ...args
@@ -216,7 +216,7 @@ getBaseStyleMaps = (unit, colors, families) ->
 		switch x
 			when 'n'
 				userSelect: 'none'
-				'-webkit-tap-highlight-color': 'transparent'
+				# '-webkit-tap-highlight-color': 'transparent'
 			else throw new Error _ERR + "usel (user-select) got invalid type: #{x}"
 
 	dis = (x) ->
@@ -300,6 +300,15 @@ getBaseStyleMaps = (unit, colors, families) ->
 
 		return "border#{side}": "#{unit(size || 1)} solid #{colors(clr)}"
 
+	out = (x) ->
+		if x == 0 then return "outline": 'none'
+
+		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+(:?px)?))?$")
+		if ! test RE, x then throw new Error _ERR + "Invalid string given for outline: #{x}"
+		[___, clr, ____, size] = match RE, x
+
+		return "outline": "#{unit(size || 1)} solid #{colors(clr)}"
+
 	ls = (x) -> letterSpacing: unit x
 
 
@@ -339,14 +348,19 @@ getBaseStyleMaps = (unit, colors, families) ->
 
 	# overflow
 	ov = (x) ->
-		switch x
-			when 'a' then overflow: 'auto'
-			when 's' then overflow: 'scroll'
-			when 'h' then overflow: 'hidden'
-			when 'v' then overflow: 'visible'
-			when 'i' then overflow: 'initial'
-			else throw new Error _ERR + "ove (overflow) expects a, s, h, v or i,
-			given: #{x}"
+		if x?[0] == 'x' then key = 'overflowX'; z = x[1]
+		else if x?[0] == 'y' then key = 'overflowY'; z = x[1]
+		else key = 'overflow'; z = x
+
+		switch z
+			when 'a' then [key]: 'auto'
+			when 's' then [key]: 'scroll'
+			when 'h' then [key]: 'hidden'
+			when 'c' then [key]: 'clip'
+			when 'v' then [key]: 'visible'
+			when 'i' then [key]: 'initial'
+			else throw new Error _ERR + "ov (overflow) expects a, s, h, v, i, or put x or y in front of those
+			eg. xa or ya given: #{x}"
 
 	# text-overflow
 	tov = (x) ->
@@ -453,7 +467,7 @@ getBaseStyleMaps = (unit, colors, families) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, ls, cur,
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, out, ls, cur,
 	rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
 	fill, stroke, va}
 

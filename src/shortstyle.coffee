@@ -14,7 +14,19 @@ tryParseNum = (x) -> if isNaN x then x else Number(x)
 
 baseSelectors = {}
 baseSelectors.f = (body) -> {':first-child': body}
+baseSelectors.fc1 = (body) -> {':first-child': {'& .c1': body}}
+baseSelectors.fc2 = (body) -> {':first-child': {'& .c2': body}}
+baseSelectors.fc3 = (body) -> {':first-child': {'& .c3': body}}
+baseSelectors.fc4 = (body) -> {':first-child': {'& .c4': body}}
+baseSelectors.fc5 = (body) -> {':first-child': {'& .c5': body}}
+
 baseSelectors.l = (body) -> {':last-child': body}
+baseSelectors.lc1 = (body) -> {':last-child': {'& .c1': body}}
+baseSelectors.lc2 = (body) -> {':last-child': {'& .c2': body}}
+baseSelectors.lc3 = (body) -> {':last-child': {'& .c3': body}}
+baseSelectors.lc4 = (body) -> {':last-child': {'& .c4': body}}
+baseSelectors.lc5 = (body) -> {':last-child': {'& .c5': body}}
+
 baseSelectors.e = (body) -> {':nth-child(even)': body}
 baseSelectors.o = (body) -> {':nth-child(odd)': body}
 # https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
@@ -27,7 +39,19 @@ baseSelectors.coa = (body) -> {'@media (pointer: coarse)': body}
 baseSelectors.ac = (body) -> {':active': body}
 
 baseSelectors.nf = (body) -> {':not(:first-child)': body}
+baseSelectors.nfc1 = (body) -> {':not(:first-child)': {'& .c1': body}}
+baseSelectors.nfc2 = (body) -> {':not(:first-child)': {'& .c2': body}}
+baseSelectors.nfc3 = (body) -> {':not(:first-child)': {'& .c3': body}}
+baseSelectors.nfc4 = (body) -> {':not(:first-child)': {'& .c4': body}}
+baseSelectors.nfc5 = (body) -> {':not(:first-child)': {'& .c5': body}}
+
 baseSelectors.nl = (body) -> {':not(:last-child)': body}
+baseSelectors.nlc1 = (body) -> {':not(:last-child)': {'& .c1': body}}
+baseSelectors.nlc2 = (body) -> {':not(:last-child)': {'& .c2': body}}
+baseSelectors.nlc3 = (body) -> {':not(:last-child)': {'& .c3': body}}
+baseSelectors.nlc4 = (body) -> {':not(:last-child)': {'& .c4': body}}
+baseSelectors.nlc5 = (body) -> {':not(:last-child)': {'& .c5': body}}
+
 baseSelectors.nac = (body) -> {':not(:active)': body}
 
 baseSelectors.hofo = (body) -> {'@media (hover: hover)': {':hover': body}, ':focus': body}
@@ -211,7 +235,7 @@ defaultUnit = (x, base = 0) ->
 				if neg then expr = "calc(-1 * (#{num}#{unit} + #{extraNum}#{extraUnit}))"
 				else expr = "calc(#{neg}#{num}#{unit} + #{extraNum}#{extraUnit})"
 
-			if minNum && maxNum then return "clamp(#{minNum}#{minUnit}, #{expr}, #{maxNum}#{maxUnit})"
+			if minNum && maxNum then return "clamp(#{maxNum}#{maxUnit}, #{expr}, #{minNum}#{minUnit})"
 			else if minNum then return "min(#{minNum}#{minUnit}, #{expr})"
 			else if maxNum then return "max(#{expr}, #{maxNum}#{maxUnit})"
 			else return expr

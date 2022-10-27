@@ -1,4 +1,4 @@
-{__, clamp, empty, last, match, max, min, props, test, type} = R = require 'ramda' #auto_require: ramda
+{__, clamp, empty, last, match, max, min, none, props, test, type} = R = require 'ramda' #auto_require: ramda
 {clamp} = RE = require 'ramda-extras' #auto_require: ramda-extras
 [ːlast] = ['last'] #auto_sugar
 qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
@@ -55,11 +55,11 @@ describe 'shortstyle', ->
 		it '10', -> eq 'min(10%, 4vw)', shortstyle.defaultUnit '4vw<10%'
 		it '11', -> eq 'max(4vw, 1rem)', shortstyle.defaultUnit '4vw>10'
 
-		it '12', -> eq 'clamp(1rem, 4vw, 2rem)', shortstyle.defaultUnit '4vw<10>20'
+		it '12', -> eq 'clamp(1rem, 4vw, 2rem)', shortstyle.defaultUnit '4vw<20>10'
 
-		it '13', -> eq 'clamp(1rem, calc(1.2rem + 4vw), 2rem)', shortstyle.defaultUnit '12+4vw<10>20'
+		it '13', -> eq 'clamp(1rem, calc(1.2rem + 4vw), 2rem)', shortstyle.defaultUnit '12+4vw<20>10'
 
-		it '14', -> eq 'clamp(1rem, calc(-1 * (1.2rem + 4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<10>20'
+		it '14', -> eq 'clamp(1rem, calc(-1 * (1.2rem + 4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<20>10'
 
 	describe 'colors', ->
 		it '-', -> eq 'rgba(0, 0, 0, 0.2)', colors('bk-2')
@@ -135,8 +135,19 @@ describe 'shortstyle', ->
 		# it 'four', ->
 		# 	deepEq {borderRadius: '0px 10px 2px 3px'}, short('br0_10_2_3')
 
+	describe 'out = outline', ->
+		it '1', -> deepEq {outline: '0.2rem solid rgba(0, 0, 0, 1)'}, short2('outbk_2')
+		it '2', -> deepEq {outline: '2rem solid rgba(0, 0, 0, 0.5)'}, short2('outbk-5_20')
+		it '3', -> deepEq {outline: 'none'}, short2('out0')
+
 	describe 'xg = flexgrow', ->
 		it 'simple', -> deepEq {flexGrow: 2}, short('xg2')
+
+	describe 'ov = overflow', ->
+		it '1', -> deepEq {overflow: 'hidden'}, short('ovh')
+		it '2', -> deepEq {overflow: 'scroll'}, short('ovs')
+		it '3', -> deepEq {overflowX: 'clip'}, short('ovxc')
+		it '4', -> deepEq {overflowY: 'visible'}, short('ovyv')
 
 	describe 'xb = flexbasis', ->
 		it '1', -> deepEq {flexBasis: '2px'}, short('xb2')
@@ -176,24 +187,24 @@ describe 'shortstyle', ->
 	describe 'f = font', ->
 		it 'simple cases', ->
 			fdeepEq short('fabu2-12'),
-				fontFamily: 'Arial, sans-serif'
 				fontSize: '12px'
 				fontWeight: 200
 				color: 'rgba(88, 113, 133, 1)'
 
 		describe '_', ->
 			it 'familly', ->
-				fdeepEq short('fa___'),
-					fontFamily: 'Arial, sans-serif'
+				# TODO: Think about how this should work
+				fdeepEq short('fa___'), {}
+					# fontFamily: 'Arial, sans-serif'
 
-				fdeepEq short('fa__'),
-					fontFamily: 'Arial, sans-serif'
+				# fdeepEq short('fa__'),
+				# 	fontFamily: 'Arial, sans-serif'
 
-				fdeepEq short('fa_'),
-					fontFamily: 'Arial, sans-serif'
+				# fdeepEq short('fa_'),
+				# 	fontFamily: 'Arial, sans-serif'
 
-				fdeepEq short('fa'),
-					fontFamily: 'Arial, sans-serif'
+				# fdeepEq short('fa'),
+				# 	fontFamily: 'Arial, sans-serif'
 
 			it 'size', ->
 				fdeepEq short('f___-12'),
