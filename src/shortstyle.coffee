@@ -1,14 +1,8 @@
-clamp = require('ramda/src/clamp'); clone = require('ramda/src/clone'); curry = require('ramda/src/curry'); filter = require('ramda/src/filter'); identity = require('ramda/src/identity'); isNil = require('ramda/src/isNil'); last = require('ramda/src/last'); map = require('ramda/src/map'); match = require('ramda/src/match'); max = require('ramda/src/max'); merge = require('ramda/src/merge'); mergeWith = require('ramda/src/mergeWith'); min = require('ramda/src/min'); nth = require('ramda/src/nth'); replace = require('ramda/src/replace'); split = require('ramda/src/split'); test = require('ramda/src/test'); trim = require('ramda/src/trim'); type = require('ramda/src/type'); #auto_require: srcramda
+import clamp from "ramda/es/clamp"; import clone from "ramda/es/clone"; import curry from "ramda/es/curry"; import filter from "ramda/es/filter"; import identity from "ramda/es/identity"; import isNil from "ramda/es/isNil"; import last from "ramda/es/last"; import map from "ramda/es/map"; import match from "ramda/es/match"; import max from "ramda/es/max"; import mergeRight from "ramda/es/mergeRight"; import mergeWith from "ramda/es/mergeWith"; import min from "ramda/es/min"; import nth from "ramda/es/nth"; import replace from "ramda/es/replace"; import split from "ramda/es/split"; import test from "ramda/es/test"; import trim from "ramda/es/trim"; import type from "ramda/es/type"; #auto_require: esramda
+import {$, sf0} from "ramda-extras" #auto_require: esramda-extras
 
-{$, clamp, sf0} = require 'ramda-extras' #auto_require: ramda-extras
-# $ = (data, functions...) -> pipe(functions...)(data)
-[] = [] #auto_sugar
-qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (...args) -> console.log ...args
-_ = (...xs) -> xs
-
-getBaseStyleMaps = require './baseStyleMaps'
-colors = require './colors'
+import getBaseStyleMaps from './baseStyleMaps'
+import * as colors from './colors'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
@@ -63,7 +57,7 @@ baseSelectors.hoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': bo
 baseSelectors.hoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}}
 baseSelectors.hoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}}
 
-# if we're already using hoc1 setting ho on child has too low specificity, this is a workaround
+# if we are already using hoc1 setting ho on child has too low specificity, this is a workaround
 baseSelectors.hoc1ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c1:hover': body}}}
 baseSelectors.hoc2ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c2:hover': body}}}
 baseSelectors.hoc3ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c3:hover': body}}}
@@ -133,7 +127,7 @@ setOrAppend = (k, x, o) ->
 	if !o[k] then o[k] = x
 	else
 		if type(x) == 'String' then o[k] += ' ' + x
-		else if type(x) == 'Object' then o[k] = merge o[k], x
+		else if type(x) == 'Object' then o[k] = mergeRight o[k], x
 
 # Helper for merging that handles strings and empty objects '': {}
 mergeNice = mergeWith (a, b) ->
@@ -256,7 +250,7 @@ defaultFamilies = ['Arial, sans', 'Times New Roman, Times, serif']
 prepareAllStyleMaps = (baseStyleMaps, styleMaps, allSelectors) ->
 	styleMapsF = $ styleMaps, filter (x) -> 'Function' == type x
 	styleMapsS = $ styleMaps, filter (x) -> 'String' == type x
-	simpleStyleMaps = merge baseStyleMaps, styleMapsF
+	simpleStyleMaps = mergeRight baseStyleMaps, styleMapsF
 
 	styleMapsSasF = $ styleMapsS, map (str) ->
 		# copy paste from below
@@ -267,7 +261,7 @@ prepareAllStyleMaps = (baseStyleMaps, styleMaps, allSelectors) ->
 
 		return () -> style4
 
-	return merge simpleStyleMaps, styleMapsSasF
+	return mergeRight simpleStyleMaps, styleMapsSasF
 
 handleESModule = (o) ->
 	if o.__esModule
@@ -277,10 +271,10 @@ handleESModule = (o) ->
 	else o
 
 # Takes styleMaps and unit function and returns parse and createElementHelper
-shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, families = defaultFamilies, selectors = {}}) ->
+export default shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, families = defaultFamilies, selectors = {}}) ->
 	styleMapsObj = handleESModule styleMaps
 	baseStyleMaps = getBaseStyleMaps unit, colors, families
-	allSelectors = merge baseSelectors, selectors
+	allSelectors = mergeRight baseSelectors, selectors
 	allStyleMaps = prepareAllStyleMaps baseStyleMaps, clone(styleMapsObj), allSelectors
 	memo = {}
 
@@ -304,5 +298,4 @@ shortstyle = ({styleMaps = {}, unit = defaultUnit, colors = defaultColors, famil
 shortstyle.colors = colors
 shortstyle.defaultUnit = defaultUnit
 
-module.exports = shortstyle
 

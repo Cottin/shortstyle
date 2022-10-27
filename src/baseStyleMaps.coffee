@@ -1,8 +1,5 @@
-__ = require('ramda/src/__'); all = require('ramda/src/all'); contains = require('ramda/src/contains'); empty = require('ramda/src/empty'); join = require('ramda/src/join'); map = require('ramda/src/map'); match = require('ramda/src/match'); none = require('ramda/src/none'); repeat = require('ramda/src/repeat'); replace = require('ramda/src/replace'); reverse = require('ramda/src/reverse'); split = require('ramda/src/split'); test = require('ramda/src/test'); type = require('ramda/src/type'); #auto_require: srcramda
-{cc, $} = require 'ramda-extras' #auto_require: ramda-extras
-qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (...args) -> console.log ...args
-_ = (...xs) -> xs
+import __ from "ramda/es/__"; import all from "ramda/es/all"; import empty from "ramda/es/empty"; import includes from "ramda/es/includes"; import join from "ramda/es/join"; import map from "ramda/es/map"; import match from "ramda/es/match"; import none from "ramda/es/none"; import repeat from "ramda/es/repeat"; import replace from "ramda/es/replace"; import reverse from "ramda/es/reverse"; import split from "ramda/es/split"; import test from "ramda/es/test"; import type from "ramda/es/type"; #auto_require: esramda
+import {cc, $} from "ramda-extras" #auto_require: esramda-extras
 
 _ERR = 'Shortstyle: '
 
@@ -12,7 +9,7 @@ colorsStatic = require './colors'
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
-getBaseStyleMaps = (unit, colors, families) ->
+export default getBaseStyleMaps = (unit, colors, families) ->
 	###### UNIT BASED
 
 	# height
@@ -89,7 +86,7 @@ getBaseStyleMaps = (unit, colors, families) ->
 				when 'a' then 'auto'
 				else unit x
 
-		if ! contains '_', x then return {backgroundSize: fromX x}
+		if ! includes '_', x then return {backgroundSize: fromX x}
 
 		RE = /^(.*)_(.*)$/
 		if ! test RE, x then throw new Error _ERR + "basi got invalid value: #{x}"
@@ -472,5 +469,3 @@ getBaseStyleMaps = (unit, colors, families) ->
 	fill, stroke, va}
 
 
-
-module.exports = getBaseStyleMaps 

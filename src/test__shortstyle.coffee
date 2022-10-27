@@ -1,13 +1,10 @@
-{__, clamp, empty, last, match, max, min, none, props, test, type} = R = require 'ramda' #auto_require: ramda
-{clamp} = RE = require 'ramda-extras' #auto_require: ramda-extras
-[ːlast] = ['last'] #auto_sugar
-qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (...args) -> console.log ...args
-_ = (...xs) -> xs
-assert = require 'assert'
-{eq, deepEq, fdeepEq} = require 'testhelp' #auto_require: testhelp
+import __ from "ramda/es/__"; import clamp from "ramda/es/clamp"; import empty from "ramda/es/empty"; import last from "ramda/es/last"; import max from "ramda/es/max"; import min from "ramda/es/min"; import none from "ramda/es/none"; import props from "ramda/es/props"; import test from "ramda/es/test"; import type from "ramda/es/type"; #auto_require: esramda
+import {} from "ramda-extras" #auto_require: esramda-extras
+_ = (xs...) -> xs
 
-shortstyle = require './shortstyle'
+import {deepEq, fdeepEq, eq, throws} from 'comon/shared/testUtils'
+
+import shortstyle from './shortstyle'
 
 styleMaps =
 	_box0: 'p2 _box2'

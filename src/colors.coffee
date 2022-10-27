@@ -1,28 +1,25 @@
-join = require('ramda/src/join'); match = require('ramda/src/match'); sum = require('ramda/src/sum'); test = require('ramda/src/test'); #auto_require: srcramda
-{mapO, $} = require 'ramda-extras' #auto_require: ramda-extras
-[] = [] #auto_sugar
-qq = (f) -> console.log match(/return (.*);/, f.toString())[1], f()
-qqq = (...args) -> console.log ...args
-_ = (...xs) -> xs
+import join from "ramda/es/join"; import match from "ramda/es/match"; import sum from "ramda/es/sum"; import test from "ramda/es/test"; #auto_require: esramda
+import {mapO, $} from "ramda-extras" #auto_require: esramda-extras
+_ = (xs...) -> xs
 
 _warn = (msg, ret) ->
   console.warn msg
   return ret || 'xx'
 
-RE = ///^
+export RE = ///^
 ([a-z]{2,3}) # color
 ([><]\d)? # adjustment of brightnes = ligher / darker
 (-\d)? # opacity
 $///
 
-REstr = "(?:[a-z]{2,3})(?:[><]\\d)?(?:-\\d)?"
+export REstr = "(?:[a-z]{2,3})(?:[><]\\d)?(?:-\\d)?"
 
 # HSB - Hue Saturation Brightness
 # HSV - Hue Saturation Value (same as HSB)
 # HSL - Hue Saturation Lightness
 
 # https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
-hsvToRgb = (_h, _s, _v) ->
+export hsvToRgb = (_h, _s, _v) ->
   [h, s, v] = [_h/360, _s/100, _v/100]
   r = g = b = i = f = p = q = t = undefined
   i = Math.floor(h * 6)
@@ -39,7 +36,7 @@ hsvToRgb = (_h, _s, _v) ->
     when 5 then _ r = v, g = p, b = q
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
 
-decompose = (clr) ->
+export decompose = (clr) ->
   if !clr || clr == 'undefined' then return ['!!', 1.0] # be nice and help with undefined
   if ! test RE, clr then return ['!!', 1.0]
   [isMatch, base, _adj, _opacity] = match RE, clr
@@ -48,9 +45,9 @@ decompose = (clr) ->
   return [base, adj, opacity]
 
 
-fuchsia = _ 300, 100, 100
+export fuchsia = _ 300, 100, 100
 
-buildColors = (baseColors) ->
+export buildColors = (baseColors) ->
   baseColorsRgb = $ baseColors, mapO ([h, s, b]) -> hsvToRgb h, s, b
   baseColorsRgbStr = $ baseColorsRgb, mapO join ', '
 
@@ -85,6 +82,3 @@ buildColors = (baseColors) ->
 
   return colors
 
-
-#auto_export: none_
-module.exports = {RE, REstr, hsvToRgb, decompose, fuchsia, buildColors}
