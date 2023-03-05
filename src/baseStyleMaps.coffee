@@ -1,9 +1,8 @@
 import __ from "ramda/es/__"; import all from "ramda/es/all"; import empty from "ramda/es/empty"; import includes from "ramda/es/includes"; import join from "ramda/es/join"; import map from "ramda/es/map"; import match from "ramda/es/match"; import none from "ramda/es/none"; import repeat from "ramda/es/repeat"; import replace from "ramda/es/replace"; import reverse from "ramda/es/reverse"; import split from "ramda/es/split"; import test from "ramda/es/test"; import type from "ramda/es/type"; #auto_require: esramda
 import {cc, $} from "ramda-extras" #auto_require: esramda-extras
+import {REstr} from './colors'
 
 _ERR = 'Shortstyle: '
-
-colorsStatic = require './colors'
 
 ###### Probably no need to override:
 
@@ -64,7 +63,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 		if x == 0 then backgroundColor: 'transparent'
 		else backgroundColor: colors x
 
-	RElin = new RegExp("^(#{colorsStatic.REstr})__(#{colorsStatic.REstr})$")
+	RElin = new RegExp("^(#{REstr})__(#{REstr})$")
 	balin = (clrs) ->
 		[start, stop] = split '__', clrs
 
@@ -291,7 +290,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 	border = (side, x) ->
 		if x == 0 then return "border#{side}": 'none'
 
-		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+(:?px)?))?$")
+		RE = new RegExp("^(#{REstr})(_(\\d+(:?px)?))?$")
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for border: #{x}"
 		[___, clr, ____, size] = match RE, x
 
@@ -300,7 +299,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 	out = (x) ->
 		if x == 0 then return "outline": 'none'
 
-		RE = new RegExp("^(#{colorsStatic.REstr})(_(\\d+(:?px)?))?$")
+		RE = new RegExp("^(#{REstr})(_(\\d+(:?px)?))?$")
 		if ! test RE, x then throw new Error _ERR + "Invalid string given for outline: #{x}"
 		[___, clr, ____, size] = match RE, x
 
@@ -376,9 +375,15 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			when 'd' then cursor: 'default'
 			else throw new Error _ERR + "invalid cur(sor) '#{x}'"
 
+	pe = (x) ->
+		switch x
+			when 'n' then pointerEvents: 'none'
+			when 'a' then pointerEvents: 'auto'
+			else throw new Error _ERR + "invalid pe (pointer-events) '#{x}'"
+
 
 	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>3__0_6_11_3_bk>9 (double shadow)
-	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(\\d+)_(#{colorsStatic.REstr})$")
+	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(\\d+)_(#{REstr})$")
 	sh = (vOrVs) ->
 		if vOrVs == 0 then return boxShadow: 'none'
 
@@ -465,7 +470,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, out, ls, cur,
-	rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
+	pe, rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
 	fill, stroke, va}
 
 

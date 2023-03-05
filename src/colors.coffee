@@ -1,6 +1,6 @@
 import join from "ramda/es/join"; import match from "ramda/es/match"; import sum from "ramda/es/sum"; import test from "ramda/es/test"; #auto_require: esramda
 import {mapO, $} from "ramda-extras" #auto_require: esramda-extras
-_ = (xs...) -> xs
+_arr = (xs...) -> xs
 
 _warn = (msg, ret) ->
   console.warn msg
@@ -28,12 +28,12 @@ export hsvToRgb = (_h, _s, _v) ->
   q = v * (1 - (f * s))
   t = v * (1 - ((1 - f) * s))
   switch i % 6
-    when 0 then _ r = v, g = t, b = p
-    when 1 then _ r = q, g = v, b = p
-    when 2 then _ r = p, g = v, b = t
-    when 3 then _ r = p, g = q, b = v
-    when 4 then _ r = t, g = p, b = v
-    when 5 then _ r = v, g = p, b = q
+    when 0 then _arr r = v, g = t, b = p
+    when 1 then _arr r = q, g = v, b = p
+    when 2 then _arr r = p, g = v, b = t
+    when 3 then _arr r = p, g = q, b = v
+    when 4 then _arr r = t, g = p, b = v
+    when 5 then _arr r = v, g = p, b = q
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
 
 export decompose = (clr) ->
@@ -45,7 +45,7 @@ export decompose = (clr) ->
   return [base, adj, opacity]
 
 
-export fuchsia = _ 300, 100, 100
+export fuchsia = _arr 300, 100, 100
 
 export buildColors = (baseColors) ->
   baseColorsRgb = $ baseColors, mapO ([h, s, b]) -> hsvToRgb h, s, b

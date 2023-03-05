@@ -166,6 +166,7 @@ addStyle = (allStyleMaps, o) ->
 				ss = split ' ', v
 				style = {}
 				for s in ss
+					k = undefined # need to reset otherwise k from last lap in loop is used
 					if s == '' || s == 'false' || s == 'true' || s == 'undefined' || s == 'null' then continue
 
 					for i in [s.length...0]
@@ -264,7 +265,7 @@ prepareAllStyleMaps = (baseStyleMaps, styleMaps, allSelectors) ->
 	return mergeRight simpleStyleMaps, styleMapsSasF
 
 handleESModule = (o) ->
-	if o.__esModule
+	if o.__esModule || o[Symbol.toStringTag] == 'Module'
 		cleanO = {}
 		for k, v of o then cleanO[k] = v
 		return cleanO
