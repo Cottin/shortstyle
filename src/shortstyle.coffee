@@ -194,8 +194,8 @@ addStyle = (allStyleMaps, o) ->
 RE_UNIT = ///
 (-)?(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax)? # num + unit, eg. 33.3%
 (?:\+(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax))? # extra + extraUnit, eg. 8+4.5vw
-(?:<(\d+)(vh|vw|%|px|vmin|vmax)?)? # min + minUnit, eg. 8vw<10rem
-(?:>(\d+)(vh|vw|%|px|vmin|vmax)?)? # max + maxUnit, eg. 8vw>20rem
+(?:<(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax)?)? # min + minUnit, eg. 8vw<10rem
+(?:>(\d+(?:\.\d+)?)(vh|vw|%|px|vmin|vmax)?)? # max + maxUnit, eg. 8vw>20rem
 ///
 
 

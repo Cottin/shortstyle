@@ -40,6 +40,7 @@ describe 'shortstyle', ->
 		it '1.1', -> eq '33.3%', shortstyle.defaultUnit '33.3%'
 		it '2', -> eq '-0.4rem', shortstyle.defaultUnit '-4'
 		it '3', -> eq '4vw', shortstyle.defaultUnit '4vw'
+		it '3.1', -> eq '4.1vw', shortstyle.defaultUnit '4.1vw'
 		it '4', -> eq '4vh', shortstyle.defaultUnit '4vh'
 		it '5', -> eq '-10%', shortstyle.defaultUnit '-10%'
 		it '6', -> eq '5vmin', shortstyle.defaultUnit '5vmin'
@@ -51,6 +52,8 @@ describe 'shortstyle', ->
 		it '9', -> eq 'min(1rem, 4vw)', shortstyle.defaultUnit '4vw<10'
 		it '10', -> eq 'min(10%, 4vw)', shortstyle.defaultUnit '4vw<10%'
 		it '11', -> eq 'max(4vw, 1rem)', shortstyle.defaultUnit '4vw>10'
+		it '11.1', -> eq 'max(4.1vw, 1rem)', shortstyle.defaultUnit '4.1vw>10'
+		it '11.2', -> eq 'max(1rem, 4.1vw)', shortstyle.defaultUnit '10>4.1vw'
 
 		it '12', -> eq 'clamp(1rem, 4vw, 2rem)', shortstyle.defaultUnit '4vw<20>10'
 
@@ -75,6 +78,7 @@ describe 'shortstyle', ->
 		it 'string', -> deepEq {height: '87%'}, short('h87%')
 		it 'custom unit', -> deepEq {height: '87px'}, short('h87')
 		it 'default unit', -> deepEq {height: '8.7rem'}, short2('h87')
+		it 'content unit', -> deepEq {height: 'fit-content'}, short2('hfit')
 
 	describe 'w = width', ->
 		it 'default unit', -> deepEq {width: '87px'}, short('w87')
@@ -156,6 +160,8 @@ describe 'shortstyle', ->
 	describe 'transform', ->
 		it 'rot', -> deepEq {transform: 'rotate(-3deg)'}, short('rot-3')
 		it 'rot + scale', -> deepEq {transform: 'rotate(-4deg) scale(1.05)'}, short('rot-3 scale1.05 rot-4')
+		it 'transX + transY', -> deepEq {transform: 'translateX(10) translateY(-5%)'}, short('transX10 transY-5%')
+
 
 
 	# describe 'bg = backgroundColor', ->

@@ -1,4 +1,4 @@
-import __ from "ramda/es/__"; import all from "ramda/es/all"; import empty from "ramda/es/empty"; import includes from "ramda/es/includes"; import join from "ramda/es/join"; import map from "ramda/es/map"; import match from "ramda/es/match"; import none from "ramda/es/none"; import repeat from "ramda/es/repeat"; import replace from "ramda/es/replace"; import reverse from "ramda/es/reverse"; import split from "ramda/es/split"; import test from "ramda/es/test"; import type from "ramda/es/type"; #auto_require: esramda
+import __ from "ramda/es/__"; import all from "ramda/es/all"; import empty from "ramda/es/empty"; import includes from "ramda/es/includes"; import join from "ramda/es/join"; import map from "ramda/es/map"; import match from "ramda/es/match"; import max from "ramda/es/max"; import min from "ramda/es/min"; import none from "ramda/es/none"; import repeat from "ramda/es/repeat"; import replace from "ramda/es/replace"; import reverse from "ramda/es/reverse"; import split from "ramda/es/split"; import test from "ramda/es/test"; import type from "ramda/es/type"; #auto_require: esramda
 import {cc, $} from "ramda-extras" #auto_require: esramda-extras
 import {REstr} from './colors'
 
@@ -8,14 +8,20 @@ _ERR = 'Shortstyle: '
 
 tryParseNum = (x) -> if isNaN x then x else Number(x)
 
+contentUnit = (x) ->
+	if x == 'fit' then 'fit-content'
+	else if x == 'max' then 'max-content'
+	else if x == 'min' then 'min-content'
+	else x
+
 export default getBaseStyleMaps = (unit, colors, families) ->
 	###### UNIT BASED
 
 	# height
-	h = (x) -> {height: unit(x)}
+	h = (x) -> {height: unit(contentUnit(x))}
 
 	# width
-	w = (x) -> {width: unit(x)}
+	w = (x) -> {width: unit(contentUnit(x))}
 
 	# min/max-height
 	ih = (x) -> {minHeight: unit(x)}
@@ -159,7 +165,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 		else if ai == 'c' then ret.alignItems = 'center'
 		else if ai == 'e' then ret.alignItems = 'flex-end'
 		else if ai == 's' then ret.alignItems = 'flex-start'
-		else if ai == 't' then ret.alignItems = 'strech'
+		else if ai == 't' then ret.alignItems = 'stretch'
 		else if ai == '_' then # noop
 		else throw new Error _ERR + "third char in x: '#{v}' is invalid, see docs"
 
@@ -222,6 +228,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			when 'b' then display: 'block'
 			when 'f' then display: 'flex'
 			when 'n' then display: 'none'
+			when 'u' then display: 'unset'
 			when 't' then display: 'table'
 			when 'tr' then display: 'table-row'
 			when 'tc' then display: 'table-cell'
@@ -320,26 +327,22 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			else throw new Error _ERR + "wh (white-space) expects n, p or i,
 			given: #{x}"
 
-	# word-wrap
-	ww = (x) ->
+	# overflow-wrap
+	ow = (x) ->
 		switch x
+			when 'a'
+				overflowWrap: 'anywhere'
 			when 'b'
-				# https://stackoverflow.com/a/33214667/416797
-				'overflow-wrap': 'break-word';
-				'word-wrap': 'break-word';
+				overflowWrap: 'break-word'
+			else throw new Error _ERR + "ow (overflow-wrap) expects a, given: #{x}"
 
-				'-ms-word-break': 'break-all';
-				# This is the dangerous one in WebKit, as it breaks things wherever
-				'word-break': 'break-all';
-				# Instead use this non-standard one:
-				'word-break': 'break-word';
-
-				# Adds a hyphen where the word breaks, if supported (No Blink)
-				'-ms-hyphens': 'auto';
-				'-moz-hyphens': 'auto';
-				'-webkit-hyphens': 'auto';
-				'hyphens': 'auto';
-			else throw new Error _ERR + "ww (word-wrap) expects b, given: #{x}"
+	# word-break
+	wb = (x) ->
+		switch x
+			when 'a' then wordBreak: 'break-all'
+			when 'w' then wordBreak: 'break-word'
+			when 'k' then wordBreak: 'keep-all'
+			else throw new Error _ERR + "wb (word-break) expects a, w, k, given: #{x}"
 
 
 	# overflow
@@ -407,6 +410,8 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 
 	rot = (deg, style) -> transform deg, 'rotate', "rotate(#{deg}deg)", style
 	scale = (x, style) -> transform x, 'scale', "scale(#{x})", style
+	transX = (x, style) -> transform x, 'translateX', "translateX(#{unit x})", style
+	transY = (x, style) -> transform x, 'translateY', "translateY(#{unit x})", style
 
 	transform = (x, key, full, style) ->
 		if !style.transform then {transform: full}
@@ -469,8 +474,8 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 		return ret
 
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
-	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ww, bord, bort, borb, borl, borr, out, ls, cur,
+	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ow, wb, bord, bort, borb, borl, borr, out, ls, cur,
 	pe, rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
-	fill, stroke, va}
+	fill, stroke, va, transX, transY}
 
 
