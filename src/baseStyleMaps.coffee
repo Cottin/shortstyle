@@ -81,7 +81,9 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 
 		return grad
 
-	baurl = (url) -> backgroundImage: "url(#{url})"
+	baurl = (url) ->
+		if url == '0' then backgroundImage: "unset"
+		else backgroundImage: "url(#{url})"
 
 	basi = (x) ->
 		fromX = (x) ->
@@ -224,6 +226,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 	dis = (x) ->
 		switch x
 			when 'i' then display: 'inline'
+			when 'ib' then display: 'inline-block'
 			when 'if' then display: 'inline-flex'
 			when 'b' then display: 'block'
 			when 'f' then display: 'flex'
@@ -386,7 +389,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 
 
 	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>3__0_6_11_3_bk>9 (double shadow)
-	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(\\d+)_(#{REstr})$")
+	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(-?\\d+)_(#{REstr})$")
 	sh = (vOrVs) ->
 		if vOrVs == 0 then return boxShadow: 'none'
 

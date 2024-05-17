@@ -25,12 +25,13 @@ baseSelectors.e = (body) -> {':nth-child(even)': body}
 baseSelectors.o = (body) -> {':nth-child(odd)': body}
 # https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
 # https://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
+# Note: our workaround so hover dosn't take precedence over fo and ac is to wrap them in @media min-width: 1px
 baseSelectors.ho = (body) -> {'@media (hover: hover)': {':hover': body}}
-baseSelectors.fo = (body) -> {':focus': body}
+baseSelectors.fo = (body) -> {'@media (min-width: 1px)': {':focus': body}}
 baseSelectors['2l'] = (body) -> {':nth-last-child(2)': body}
 baseSelectors.fin = (body) -> {'@media (pointer: fine)': body}
 baseSelectors.coa = (body) -> {'@media (pointer: coarse)': body}
-baseSelectors.ac = (body) -> {':active': body}
+baseSelectors.ac = (body) -> {'@media (min-width: 1px)': {':active': body}}
 
 baseSelectors.nf = (body) -> {':not(:first-child)': body}
 baseSelectors.nfc1 = (body) -> {':not(:first-child)': {'& .c1': body}}
@@ -64,11 +65,17 @@ baseSelectors.hoc3ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c3:ho
 baseSelectors.hoc4ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c4:hover': body}}}
 baseSelectors.hoc5ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c5:hover': body}}}
 
-baseSelectors.foc1 = (body) -> {':focus': {'& .c1': body}}
-baseSelectors.foc2 = (body) -> {':focus': {'& .c2': body}}
-baseSelectors.foc3 = (body) -> {':focus': {'& .c3': body}}
-baseSelectors.foc4 = (body) -> {':focus': {'& .c4': body}}
-baseSelectors.foc5 = (body) -> {':focus': {'& .c5': body}}
+baseSelectors.foc1 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c1': body}}}
+baseSelectors.foc2 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c2': body}}}
+baseSelectors.foc3 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c3': body}}}
+baseSelectors.foc4 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c4': body}}}
+baseSelectors.foc5 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c5': body}}}
+
+baseSelectors.acc1 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c1': body}}}
+baseSelectors.acc2 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c2': body}}}
+baseSelectors.acc3 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c3': body}}}
+baseSelectors.acc4 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c4': body}}}
+baseSelectors.acc5 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c5': body}}}
 
 baseSelectors.hofoc1 = (body) -> {'@media (hover: hover)': {':hover': {'& .c1': body}}, ':focus': {'& .c1': body}}
 baseSelectors.hofoc2 = (body) -> {'@media (hover: hover)': {':hover': {'& .c2': body}}, ':focus': {'& .c2': body}}
