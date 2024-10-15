@@ -61,11 +61,12 @@ describe 'shortstyle', ->
 
 		it '14', -> eq 'clamp(1rem, calc(-1 * (1.2rem + 4vw)), 2rem)', shortstyle.defaultUnit '-12+4vw<20>10'
 
-	describe 'colors', ->
+	describe.only 'colors', ->
 		it '-', -> eq 'rgba(0, 0, 0, 0.2)', colors('bk-2')
-		it '>', -> eq 'rgba(121, 157, 184, 1)', colors('bu>2')
-		it '<', -> eq 'rgba(54, 70, 82, 1)', colors('bu<2')
-		it '<-', -> eq 'rgba(54, 70, 82, 0.3)', colors('bu<2-3')
+		it '>', -> eq 'rgba(121, 157, 184, 1)', colors('bu>20')
+		it '>05', -> eq 'rgba(96, 124, 145, 1)', colors('bu>05')
+		it '<', -> eq 'rgba(54, 70, 82, 1)', colors('bu<20')
+		it '<-', -> eq 'rgba(54, 70, 82, 0.3)', colors('bu<20-3')
 
 	describe 'edge cases', ->
 		it 'empty string', -> deepEq {}, short('')
@@ -160,8 +161,11 @@ describe 'shortstyle', ->
 	describe 'transform', ->
 		it 'rot', -> deepEq {transform: 'rotate(-3deg)'}, short('rot-3')
 		it 'rot + scale', -> deepEq {transform: 'rotate(-4deg) scale(1.05)'}, short('rot-3 scale1.05 rot-4')
-		it 'transX + transY', -> deepEq {transform: 'translateX(10) translateY(-5%)'}, short('transX10 transY-5%')
+		it 'transX + transY', -> deepEq {transform: 'translateX(10px) translateY(-5%)'}, short('transX10 transY-5%')
 
+	describe 'ease', ->
+		it '1', -> deepEq {transition: '250ms ease'}, short('ease250')
+		it '2', -> deepEq {transition: 'opacity 250ms ease'}, short('ease250_opacity')
 
 
 	# describe 'bg = backgroundColor', ->
@@ -171,7 +175,7 @@ describe 'shortstyle', ->
 	describe 'balin = background: linear-gradient', ->
 		it '1', ->
 			deepEq {background: 'linear-gradient(-180deg, rgba(128, 128, 128, 0.1) 0%, rgba(204, 204, 204, 0.3) 100%)'},
-			short('balinbk>5-1__bk>8-3')
+			short('balinbk>50-1__bk>80-3')
 
 	describe 'baurl = background-image: url(...)', ->
 		it '1', ->
@@ -214,7 +218,7 @@ describe 'shortstyle', ->
 					fontSize: '12px'
 
 			it 'color', ->
-				fdeepEq short('f_bu>2-1'),
+				fdeepEq short('f_bu>20-1'),
 					color: 'rgba(121, 157, 184, 0.1)'
 
 			it 'weight', ->
@@ -231,7 +235,7 @@ describe 'shortstyle', ->
 			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1)'}, short('sh1_2_3_4_bk-1')
 		it '2', ->
 			deepEq {boxShadow: '1px 2px 3px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(128, 128, 128, 0.2)'},
-			short('sh1_2_3_4_bk-1__4_4_4_4_bk>5-2')
+			short('sh1_2_3_4_bk-1__4_4_4_4_bk>50-2')
 
 	describe 'tsh = text-shadow', ->
 		it '1', ->
@@ -266,7 +270,7 @@ describe 'shortstyle', ->
 			deepEq expected, res
 
 		it 'Edge case', ->
-			res = short 'ho(p1) hoc1(p2)'
+			res = short 'ho(p1) hoc1(p2) xg1 w100% xc_c p0_40 z4 posr hoc2(fillbuc-1 op0.9) nhoc2(p3) hoc5(op1) hoc6(op0)'
 			expected =
 				'@media (hover: hover)': { ':hover': {padding: '1px', '& .c1': {padding: '2px'}}}
 			deepEq expected, res

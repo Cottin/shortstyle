@@ -218,9 +218,8 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 
 	usel = (x) ->
 		switch x
-			when 'n'
-				userSelect: 'none'
-				# '-webkit-tap-highlight-color': 'transparent'
+			when 'n' then userSelect: 'none'
+			when 't' then userSelect: 'text'
 			else throw new Error _ERR + "usel (user-select) got invalid type: #{x}"
 
 	dis = (x) ->
@@ -388,7 +387,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			else throw new Error _ERR + "invalid pe (pointer-events) '#{x}'"
 
 
-	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>3__0_6_11_3_bk>9 (double shadow)
+	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>30__0_6_11_3_bk>90 (double shadow)
 	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(-?\\d+)_(#{REstr})$")
 	sh = (vOrVs) ->
 		if vOrVs == 0 then return boxShadow: 'none'
@@ -400,6 +399,21 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			if !res then return warn "Invalid string given for sh (shadow): #{v}"
 			[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
 			return "#{x} #{y} #{blur} #{spread} #{colors(res[5])}"
+
+		boxShadow: $ shadows, join ', '
+
+	# shx_y_blur_spread_clr = eg. sh2_3_4_2_bk>30__0_6_11_3_bk>90 (double shadow)
+	REsh = new RegExp("^(-?\\d+)_(-?\\d+)_(\\d+)_(-?\\d+)_(#{REstr})$")
+	ish = (vOrVs) ->
+		if vOrVs == 0 then return boxShadow: 'none'
+
+		vs = split '__', vOrVs
+
+		shadows = $ vs, map (v) ->
+			res = match REsh, v
+			if !res then return warn "Invalid string given for sh (shadow): #{v}"
+			[___, x, y, blur, spread] = $ res, map (s) -> unit parseInt s
+			return "inset #{x} #{y} #{blur} #{spread} #{colors(res[5])}"
 
 		boxShadow: $ shadows, join ', '
 
@@ -422,6 +436,10 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 			re = new RegExp("#{key}\\(.*?\\)")
 			if test(re, style.transform) then transform: replace re, full, style.transform
 			else transform: style.transform + " #{full}"
+
+	ease = (val) ->
+		[ms, attr] = (val+'').split '_'
+		transition: "#{if attr then attr+' ' else ''}#{ms}ms ease"
 
 	fill = (x) ->
 		if x == 0 then fill: 'none'
@@ -449,7 +467,7 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 		# eg. fabua-35-15
 		RE = ///^
 		([a-z_]) # family
-		([a-z]{2,3}(?:[><]\d)?(?:-\d)?|_)? # color
+		([a-z]{2,3}(?:[><]\d\d)?(?:-\d)?|_)? # color
 		(\d|_)? # weight
 		(?:-(.*)|_)? # size
 		$///
@@ -479,6 +497,6 @@ export default getBaseStyleMaps = (unit, colors, families) ->
 	return {h, w, ih, xh, iw, xw, lef, rig, top, bot, m, p, pos, x, xg, xs, xb, ta, z, wh, ov, tov, f, op, bg,
 	br, mt, mb, ml, mr, pt, pb, pl, pr, ttra, dis, vis, td, usel, lh, ow, wb, bord, bort, borb, borl, borr, out, ls, cur,
 	pe, rot, scale, sh, jus, als, baurl, balin, basi, bapo, bare, bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, fs, tsh,
-	fill, stroke, va, transX, transY}
+	fill, stroke, va, transX, transY, ease, ish}
 
 

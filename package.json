@@ -46,6 +46,6 @@
     "setupFilesAfterEnv": [
       "./setupTests.js"
     ],
-    "verbose": true
+    "verbose": false
   }
 }

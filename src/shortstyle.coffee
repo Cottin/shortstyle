@@ -28,6 +28,8 @@ baseSelectors.o = (body) -> {':nth-child(odd)': body}
 # Note: our workaround so hover dosn't take precedence over fo and ac is to wrap them in @media min-width: 1px
 baseSelectors.ho = (body) -> {'@media (hover: hover)': {':hover': body}}
 baseSelectors.fo = (body) -> {'@media (min-width: 1px)': {':focus': body}}
+# baseSelectors.fv = (body) -> {'@media (min-width: 1px)': {':focus-visible': body}}
+# focus-visible creates hydration error in Next and not too easy to fix
 baseSelectors['2l'] = (body) -> {':nth-last-child(2)': body}
 baseSelectors.fin = (body) -> {'@media (pointer: fine)': body}
 baseSelectors.coa = (body) -> {'@media (pointer: coarse)': body}
@@ -49,6 +51,9 @@ baseSelectors.nlc5 = (body) -> {':not(:last-child)': {'& .c5': body}}
 
 baseSelectors.nac = (body) -> {':not(:active)': body}
 
+baseSelectors.nhoc2 = (body) -> {'@media (hover: hover)': {':not(:hover)': {'& .c2': body}}}
+baseSelectors.nhoc6 = (body) -> {'@media (hover: hover)': {':not(:hover)': {'& .c6': body}}}
+
 baseSelectors.hofo = (body) -> {'@media (hover: hover)': {':hover': body}, ':focus': body}
 
 # selectors for hover and focus that targets children
@@ -57,6 +62,9 @@ baseSelectors.hoc2 = (body) -> {'@media (hover: hover)': {':hover': {'& .c2': bo
 baseSelectors.hoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': body}}}
 baseSelectors.hoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}}
 baseSelectors.hoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}}
+baseSelectors.hoc6 = (body) -> {'@media (hover: hover)': {':hover': {'& .c6': body}}}
+baseSelectors.hoc7 = (body) -> {'@media (hover: hover)': {':hover': {'& .c7': body}}}
+baseSelectors.hoc8 = (body) -> {'@media (hover: hover)': {':hover': {'& .c8': body}}}
 
 # if we are already using hoc1 setting ho on child has too low specificity, this is a workaround
 baseSelectors.hoc1ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c1:hover': body}}}

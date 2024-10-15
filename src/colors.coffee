@@ -8,11 +8,11 @@ _warn = (msg, ret) ->
 
 export RE = ///^
 ([a-z]{2,3}) # color
-([><]\d)? # adjustment of brightnes = ligher / darker
+([><]\d\d)? # adjustment of brightnes = ligher / darker
 (-\d)? # opacity
 $///
 
-export REstr = "(?:[a-z]{2,3})(?:[><]\\d)?(?:-\\d)?"
+export REstr = "(?:[a-z]{2,3})(?:[><]\\d\\d)?(?:-\\d)?"
 
 # HSB - Hue Saturation Brightness
 # HSV - Hue Saturation Value (same as HSB)
@@ -46,7 +46,6 @@ export hsvToRgb = (_h, _s, _v) ->
     when 4 then _arr r = t, g = p, b = v
     when 5 then _arr r = v, g = p, b = q
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
-
 
 # https://stackoverflow.com/a/5624139/416797
 export hexToRgb = (hex) ->
@@ -87,7 +86,7 @@ export decompose = (clr) ->
   if !clr || clr == 'undefined' then return ['!!', 1.0] # be nice and help with undefined
   if ! test RE, clr then return ['!!', 1.0]
   [isMatch, base, _adj, _opacity] = match RE, clr
-  adj = if !_adj then 0 else parseInt(_adj[1]) * 10 * (_adj[0] == '<' && -1 || 1)
+  adj = if !_adj then 0 else parseInt(_adj[1]+_adj[2]) * (_adj[0] == '<' && -1 || 1)
   opacity = if _opacity then parseInt(_opacity[1]) / 10 else 1.0
   return [base, adj, opacity]
 
