@@ -13,6 +13,9 @@ baseSelectors.fc2 = (body) -> {':first-child': {'& .c2': body}}
 baseSelectors.fc3 = (body) -> {':first-child': {'& .c3': body}}
 baseSelectors.fc4 = (body) -> {':first-child': {'& .c4': body}}
 baseSelectors.fc5 = (body) -> {':first-child': {'& .c5': body}}
+baseSelectors.fc6 = (body) -> {':first-child': {'& .c6': body}}
+baseSelectors.fc7 = (body) -> {':first-child': {'& .c7': body}}
+baseSelectors.fc8 = (body) -> {':first-child': {'& .c8': body}}
 
 baseSelectors.l = (body) -> {':last-child': body}
 baseSelectors.lc1 = (body) -> {':last-child': {'& .c1': body}}
@@ -20,6 +23,9 @@ baseSelectors.lc2 = (body) -> {':last-child': {'& .c2': body}}
 baseSelectors.lc3 = (body) -> {':last-child': {'& .c3': body}}
 baseSelectors.lc4 = (body) -> {':last-child': {'& .c4': body}}
 baseSelectors.lc5 = (body) -> {':last-child': {'& .c5': body}}
+baseSelectors.lc6 = (body) -> {':last-child': {'& .c6': body}}
+baseSelectors.lc7 = (body) -> {':last-child': {'& .c7': body}}
+baseSelectors.lc8 = (body) -> {':last-child': {'& .c8': body}}
 
 baseSelectors.e = (body) -> {':nth-child(even)': body}
 baseSelectors.o = (body) -> {':nth-child(odd)': body}
@@ -41,6 +47,9 @@ baseSelectors.nfc2 = (body) -> {':not(:first-child)': {'& .c2': body}}
 baseSelectors.nfc3 = (body) -> {':not(:first-child)': {'& .c3': body}}
 baseSelectors.nfc4 = (body) -> {':not(:first-child)': {'& .c4': body}}
 baseSelectors.nfc5 = (body) -> {':not(:first-child)': {'& .c5': body}}
+baseSelectors.nfc6 = (body) -> {':not(:first-child)': {'& .c6': body}}
+baseSelectors.nfc7 = (body) -> {':not(:first-child)': {'& .c7': body}}
+baseSelectors.nfc8 = (body) -> {':not(:first-child)': {'& .c8': body}}
 
 baseSelectors.nl = (body) -> {':not(:last-child)': body}
 baseSelectors.nlc1 = (body) -> {':not(:last-child)': {'& .c1': body}}
@@ -48,6 +57,9 @@ baseSelectors.nlc2 = (body) -> {':not(:last-child)': {'& .c2': body}}
 baseSelectors.nlc3 = (body) -> {':not(:last-child)': {'& .c3': body}}
 baseSelectors.nlc4 = (body) -> {':not(:last-child)': {'& .c4': body}}
 baseSelectors.nlc5 = (body) -> {':not(:last-child)': {'& .c5': body}}
+baseSelectors.nlc6 = (body) -> {':not(:last-child)': {'& .c6': body}}
+baseSelectors.nlc7 = (body) -> {':not(:last-child)': {'& .c7': body}}
+baseSelectors.nlc8 = (body) -> {':not(:last-child)': {'& .c8': body}}
 
 baseSelectors.nac = (body) -> {':not(:active)': body}
 
@@ -72,24 +84,36 @@ baseSelectors.hoc2ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c2:ho
 baseSelectors.hoc3ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c3:hover': body}}}
 baseSelectors.hoc4ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c4:hover': body}}}
 baseSelectors.hoc5ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c5:hover': body}}}
+baseSelectors.hoc6ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c6:hover': body}}}
+baseSelectors.hoc7ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c7:hover': body}}}
+baseSelectors.hoc8ho = (body) -> {'@media (hover: hover)': {':hover': {'& .c8:hover': body}}}
 
 baseSelectors.foc1 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c1': body}}}
 baseSelectors.foc2 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c2': body}}}
 baseSelectors.foc3 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c3': body}}}
 baseSelectors.foc4 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c4': body}}}
 baseSelectors.foc5 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c5': body}}}
+baseSelectors.foc6 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c6': body}}}
+baseSelectors.foc7 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c7': body}}}
+baseSelectors.foc8 = (body) -> {'@media (min-width: 1px)': {':focus': {'& .c8': body}}}
 
 baseSelectors.acc1 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c1': body}}}
 baseSelectors.acc2 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c2': body}}}
 baseSelectors.acc3 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c3': body}}}
 baseSelectors.acc4 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c4': body}}}
 baseSelectors.acc5 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c5': body}}}
+baseSelectors.acc6 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c6': body}}}
+baseSelectors.acc7 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c7': body}}}
+baseSelectors.acc8 = (body) -> {'@media (min-width: 1px)': {':active': {'& .c8': body}}}
 
 baseSelectors.hofoc1 = (body) -> {'@media (hover: hover)': {':hover': {'& .c1': body}}, ':focus': {'& .c1': body}}
 baseSelectors.hofoc2 = (body) -> {'@media (hover: hover)': {':hover': {'& .c2': body}}, ':focus': {'& .c2': body}}
 baseSelectors.hofoc3 = (body) -> {'@media (hover: hover)': {':hover': {'& .c3': body}}, ':focus': {'& .c3': body}}
 baseSelectors.hofoc4 = (body) -> {'@media (hover: hover)': {':hover': {'& .c4': body}}, ':focus': {'& .c4': body}}
 baseSelectors.hofoc5 = (body) -> {'@media (hover: hover)': {':hover': {'& .c5': body}}, ':focus': {'& .c5': body}}
+baseSelectors.hofoc6 = (body) -> {'@media (hover: hover)': {':hover': {'& .c6': body}}, ':focus': {'& .c6': body}}
+baseSelectors.hofoc7 = (body) -> {'@media (hover: hover)': {':hover': {'& .c7': body}}, ':focus': {'& .c7': body}}
+baseSelectors.hofoc8 = (body) -> {'@media (hover: hover)': {':hover': {'& .c8': body}}, ':focus': {'& .c8': body}}
 
 # R.match(/(\w)(\d)/g, 'a1 b2 c3') returns ["a1", "b2", "c3"]
 # matchG(/(\w)(\d)/g, 'a1 b2 c3') returns [["a1", "a", "1"], ["b2", "b", "2"], ["c3", "c", "3"]]
